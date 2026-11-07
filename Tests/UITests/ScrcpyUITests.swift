@@ -66,7 +66,11 @@ final class ScrcpyUITests: XCTestCase {
             let margin = (surface.frame.height-dimensions[1]*scale)/2/surface.frame.height
             surface.coordinate(withNormalizedOffset:CGVector(dx:0.5,dy:margin+0.01)).press(forDuration:0.1,thenDragTo:surface.coordinate(withNormalizedOffset:CGVector(dx:0.5,dy:0.5)))
             sleep(1); snapshot(app,"remote-top-gesture")
-            surface.coordinate(withNormalizedOffset:CGVector(dx:0.5,dy:1-margin-0.01)).press(forDuration:0.1,thenDragTo:surface.coordinate(withNormalizedOffset:CGVector(dx:0.5,dy:0.5)))
+            let changed = (surface.value as? String ?? "").split(separator:"x").compactMap { Double($0) }
+            let latest = changed.count == 2 ? changed : dimensions
+            let newScale = min(surface.frame.width/latest[0],surface.frame.height/latest[1])
+            let bottomMargin = (surface.frame.height-latest[1]*newScale)/2/surface.frame.height
+            surface.coordinate(withNormalizedOffset:CGVector(dx:0.5,dy:1-bottomMargin-0.01)).press(forDuration:0.1,thenDragTo:surface.coordinate(withNormalizedOffset:CGVector(dx:0.5,dy:0.5)))
             sleep(1); snapshot(app,"remote-bottom-gesture")
         }
         XCTAssertEqual(state.value as? String,"ready")
