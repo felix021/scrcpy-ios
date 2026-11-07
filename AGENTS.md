@@ -9,7 +9,7 @@
 - `Sources/Probe/`：macOS 命令行端到端探针，只操作明确指定的测试 Android。
 - `Tests/CoreTests/`、`Tests/UITests/`：协议边界和界面验收。
 - `Resources/`：许可文本与下载后生成的 Android 服务；JAR 不进 Git。
-- `project.yml`、`Package.swift`、`scripts/`：工程生成、构建与验证。生成的 Xcode 工程不进 Git。
+- `project.yml`、`Package.swift`、`scripts/`：工程生成、构建、Ad Hoc 签名与验证。生成的 Xcode 工程不进 Git。
 - `docs/`：分主题说明；本机配置、SSH 别名、设备编号和签名只放私有配置仓库。
 
 ## 修改规则

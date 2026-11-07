@@ -34,7 +34,7 @@ scripts/build-ios.sh simulator  # 生成工程并构建模拟器 App
 scripts/build-ios.sh device     # 生成未签名设备 IPA
 ```
 
-脚本下载固定版本的 Android 服务并校验 SHA-256。JAR、Xcode 工程、构建产物及签名材料均不提交。真机安装需自己的 Apple 签名，见 [构建与签名](docs/building.md)。
+脚本下载固定版本的 Android 服务并校验 SHA-256。JAR、Xcode 工程、构建产物及签名材料均不提交。真机安装需自己的 Apple 签名；已注册设备可用 `scripts/sign-ios.py` 生成 Ad Hoc 签名包，见 [构建与签名](docs/building.md)。
 
 ## 许可
 

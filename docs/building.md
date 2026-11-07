@@ -33,6 +33,25 @@ scripts/build-ios.sh device
 
 证书、私钥、描述文件、账号和本机 SSH / 设备信息放私有配置中，不写进工程或文档。工程不内置 Team ID，也不自动上传 App Store Connect。准备 TestFlight / App Store 时另行配置签名、隐私说明、商店信息和审核资料。
 
+## 为已注册设备签名（Ad Hoc）
+
+与构建分开执行，Linux 或 macOS 均可。安装 [apple-codesign](https://github.com/indygreg/apple-platform-rs) 提供的 `rcodesign`；另需 OpenSSL。
+
+先在 Apple 开发者账号中注册目标设备，为本项目包名创建独立的 Ad Hoc 描述文件，选择该设备和已有的有效 Distribution 证书。其他 App 的描述文件不能直接复用。
+
+```sh
+python3 scripts/sign-ios.py \
+  --input build/Scrcpy-unsigned.ipa \
+  --profile /private/path/scrcpy-adhoc.mobileprovision \
+  --signer /private/path/distribution-signer.pem \
+  --device <target-device-udid> \
+  --output build/Scrcpy-adhoc.ipa
+```
+
+脚本在签名前检查描述文件有效期、包名、证书及目标设备，写入描述文件和 Keychain 权限，并递归签名内嵌框架。`--device` 建议始终传入，避免生成不包含目标设备的包。输出带 SHA-256，可再在 Mac 上解包并用 `codesign --verify --deep --strict Payload/Scrcpy.app` 校验。
+
+签名 IPA 只供描述文件内的设备安装，不是 TestFlight / App Store 包。描述文件含设备标识，签名包应通过私有下载渠道提供，不上传公开 Release。设备信息、描述文件和密钥路径保存在私有配置仓库；不在公开源码写死账号、证书或 UDID。
+
 ## 远程 Mac
 
 可把源码同步到专用构建目录，再通过 SSH 执行上述脚本。排除 `.git`、`.build`、`build`、生成工程；不要覆盖其他项目目录。SSH 别名、路径和模拟器 UUID 由个人配置提供。

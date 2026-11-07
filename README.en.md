@@ -34,7 +34,7 @@ scripts/build-ios.sh simulator  # Generate project and build simulator app
 scripts/build-ios.sh device     # Build an unsigned device IPA
 ```
 
-The script downloads pinned Android services and verifies SHA-256. Generated JARs, Xcode projects, build outputs and signing materials stay out of Git. Device installation requires your own Apple signing; see [building](docs/building.md) (Chinese).
+The script downloads pinned Android services and verifies SHA-256. Generated JARs, Xcode projects, build outputs and signing materials stay out of Git. Device installation requires your own Apple signing. Use `scripts/sign-ios.py` for registered Ad Hoc devices; see [building](docs/building.md) (Chinese).
 
 ## License
 
