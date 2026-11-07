@@ -1,0 +1,3 @@
+"CFBundleDisplayName" = "远控 · scrcpy";
+"NSLocalNetworkUsageDescription" = "通过局域网 ADB 连接并控制你的 Android 设备。";
+"NSMicrophoneUsageDescription" = "仅在开启麦克风转发后，将本机麦克风发送给已连接的 Android 设备。";

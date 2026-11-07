@@ -1,0 +1,3 @@
+"CFBundleDisplayName" = "Remote · scrcpy";
+"NSLocalNetworkUsageDescription" = "Connect to and control your Android device over ADB on your local network.";
+"NSMicrophoneUsageDescription" = "Forward your microphone to the connected Android device only when you enable forwarding.";

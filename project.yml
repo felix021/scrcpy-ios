@@ -1,0 +1,74 @@
+name: Scrcpy
+options:
+  deploymentTarget:
+    iOS: "16.0"
+settings:
+  base:
+    SWIFT_VERSION: "5.9"
+    SWIFT_STRICT_CONCURRENCY: minimal
+    MARKETING_VERSION: "0.1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    CODE_SIGN_STYLE: Automatic
+    DEVELOPMENT_TEAM: ""
+targets:
+  ScrcpyCore:
+    type: framework
+    platform: iOS
+    sources: [Sources/Core]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: cn.felix021.scrcpy.ios.core
+        GENERATE_INFOPLIST_FILE: YES
+        SKIP_INSTALL: YES
+  Scrcpy:
+    type: application
+    platform: iOS
+    sources:
+      - Sources/App
+      - Assets.xcassets
+      - path: Resources
+        buildPhase: resources
+    dependencies:
+      - target: ScrcpyCore
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: cn.felix021.scrcpy.ios
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        TARGETED_DEVICE_FAMILY: "1,2"
+    info:
+      path: build/Info.plist
+      properties:
+        CFBundleDisplayName: Remote · scrcpy
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        UILaunchScreen: {}
+        NSLocalNetworkUsageDescription: Connect to an Android device over ADB on your local network.
+        NSMicrophoneUsageDescription: Forward your microphone to the connected Android device when you enable it.
+        ITSAppUsesNonExemptEncryption: false
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationPortraitUpsideDown
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        UISupportedInterfaceOrientations~ipad:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationPortraitUpsideDown
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+  ScrcpyUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources: [Tests/UITests]
+    dependencies:
+      - target: Scrcpy
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: cn.felix021.scrcpy.ios.uitests
+        GENERATE_INFOPLIST_FILE: YES
+schemes:
+  Scrcpy:
+    build:
+      targets:
+        Scrcpy: all
+    test:
+      targets: [ScrcpyUITests]
