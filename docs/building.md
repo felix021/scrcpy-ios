@@ -2,12 +2,16 @@
 
 ## 环境与依赖
 
-需要 macOS、Xcode、Python 3 和 [XcodeGen](https://github.com/yonaskolb/XcodeGen)。最低部署目标 iOS / iPadOS 16，Swift 5.9 语言模式；首轮构建使用 Xcode 26.6。
+需要 macOS、Xcode、Python 3、CMake 和 [XcodeGen](https://github.com/yonaskolb/XcodeGen)。最低部署目标 iOS / iPadOS 16，Swift 5.9 语言模式；首轮构建使用 Xcode 26.6。
 
 ```sh
-brew install xcodegen
+brew install xcodegen cmake
 scripts/build-ios.sh simulator
 ```
+
+脚本还会下载并校验固定版本 BoringSSL 源码，按 macOS、iOS 设备、iOS 模拟器分别生成静态库。产物全部位于 `build/boringssl/`；源码版本和 SHA-256 见 `scripts/prepare-crypto.py`。当前模拟器库面向 Apple Silicon（arm64），Intel Mac 可扩展构建脚本的架构参数。单独运行 Swift Package 测试前先执行 `scripts/build-crypto.sh macosx`。
+
+构建与远程 UI 测试会持有同一个文件锁，串行执行工程生成和 Xcode 操作，避免同一目录同时生成 `.xcodeproj` 导致拷贝冲突；不同任务需要并行时应使用各自构建目录。
 
 `project.yml` 是工程的唯一来源；修改后重新 `xcodegen generate`，生成的 `.xcodeproj` 不提交。Swift Package 用于核心协议测试和 macOS 探针，不替代完整 iOS 工程。
 

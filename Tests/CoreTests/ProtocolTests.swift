@@ -54,4 +54,22 @@ final class ProtocolTests: XCTestCase {
         XCTAssertTrue(SecKeyVerifySignature(identity.publicKey, .rsaSignatureDigestPKCS1v15SHA1, digest as CFData, signature as CFData, &error))
         XCTAssertThrowsError(try identity.sign(Data(repeating: 0, count: 21)))
     }
+    func testPairingQRChallengeAndFreshSecrets() throws {
+        let a=try PairingChallenge(), b=try PairingChallenge()
+        XCTAssertTrue(a.serviceName.hasPrefix("studio-"))
+        XCTAssertTrue(a.qrPayload.hasPrefix("WIFI:T:ADB;S:studio-")); XCTAssertTrue(a.qrPayload.hasSuffix(";;"))
+        XCTAssertFalse(a.password.contains(";")); XCTAssertGreaterThanOrEqual(a.password.count,16)
+        XCTAssertNotEqual(a.serviceName,b.serviceName); XCTAssertNotEqual(a.password,b.password)
+    }
+    func testPairingDeviceNamePreservesWordsAndRejectsInvalidNames() throws {
+        let identity=try AdbIdentity(persistent:false)
+        let bytes=try identity.adbPublicKey(name:"My iPad 中文")
+        let text=String(decoding:bytes.dropLast(),as:UTF8.self)
+        let fields=text.split(whereSeparator:{$0 == " " || $0 == "\t" || $0 == "\n"})
+        XCTAssertEqual(fields.count,2)
+        XCTAssertEqual(String(fields[1]),"My_iPad_中文")
+        XCTAssertThrowsError(try identity.adbPublicKey(name:" "))
+        XCTAssertThrowsError(try identity.adbPublicKey(name:String(repeating:"x",count:121)))
+    }
+
 }

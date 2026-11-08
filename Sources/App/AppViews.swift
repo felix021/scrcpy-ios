@@ -48,11 +48,9 @@ struct SheetPanel<Content: View, Footer: View>: View {
     @ViewBuilder let content: () -> Content
     @ViewBuilder let footer: () -> Footer
     var body: some View {
-        ScrollView {
+        SettingsScroll {
             VStack(alignment:.leading,spacing:16) { Text(title).font(.system(size:23,weight:.bold)); if !subtitle.isEmpty { Text(subtitle).font(.system(size:12)).foregroundStyle(Theme.muted) }; NoticeBanner(model:model); content() }.padding(22).frame(maxWidth:.infinity,alignment:.leading)
-        }
-        .scrollDismissesKeyboard(.interactively)
-        .safeAreaInset(edge:.bottom,spacing:0) { footer().padding(.horizontal,22).padding(.top,10).padding(.bottom,12).background(.ultraThinMaterial) }
+        } footer: { footer().padding(.horizontal,22) }
         .background(Theme.card.opacity(0.88)).preferredColorScheme(.dark).presentationDragIndicator(.visible)
     }
 }
@@ -77,14 +75,6 @@ struct ConfirmCard: View {
     @Environment(\.scenePhase) private var phase
     var body: some Scene { WindowGroup { RootView(model:model).preferredColorScheme(.dark).tint(Theme.accent).environment(\.locale,model.effectiveLocale).onChange(of:phase) { if $0 == .background && model.active { model.disconnect(message:L("已离开远控界面，连接结束","Left the remote screen; connection closed")) } } } }
 }
-private struct FormBottom: PreferenceKey {
-    static var defaultValue: CGFloat = 0
-    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) { value = nextValue() }
-}
-private struct FormHeight: PreferenceKey {
-    static var defaultValue: CGFloat = 0
-    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) { value = nextValue() }
-}
 struct RootView: View {
     @ObservedObject var model: AppModel
     @State private var appSettings = false
@@ -92,8 +82,7 @@ struct RootView: View {
     @State private var save = false
     @State private var runtime = false
     @State private var text = false
-    @State private var formBottom: CGFloat = 0
-    @State private var formHeight: CGFloat = 0
+    @State private var pairing = false
     var body: some View {
         Group {
             if model.active { MirrorView(model:model,showSettings:{runtime=true},showText:{text=true}) }
@@ -105,11 +94,12 @@ struct RootView: View {
         .sheet(isPresented:$profiles) { ProfilePicker(model:model).presentationDetents([.medium,.large]) }
         .sheet(isPresented:$save) { SaveProfile(model:model).presentationDetents([.height(290),.medium]) }
         .sheet(isPresented:$runtime) { RuntimeSettings(model:model).presentationDetents([.medium,.large]).transparentSheet() }
+        .sheet(isPresented:$pairing) { PairingView(model:model).presentationDetents([.large]) }
         .sheet(isPresented:$text) { TextEditorSheet(model:model).presentationDetents([.medium,.large]) }
         .onChange(of:model.active) { if !$0 { runtime=false; text=false } }
     }
     private var form: some View {
-        ScrollView {
+        SettingsScroll(cueID:"formScrollHint") {
             VStack(spacing:14) {
                 HStack(alignment:.center,spacing:8) {
                     Text(L("远程控制","Remote control")).font(.system(size:24,weight:.bold)).lineLimit(1).minimumScaleFactor(0.7)
@@ -126,6 +116,7 @@ struct RootView: View {
                         FormField(title:L("设备 IP / 主机名","Device IP / hostname"),text:model.hostBinding(),id:"host",numeric:false)
                         FormField(title:L("ADB 端口","ADB port"),text:model.portBinding(),id:"port").frame(width:105)
                     }
+                    Button { pairing=true } label: { Label(L("无线调试配对","Pair wireless debugging"),systemImage:"qrcode").frame(maxWidth:.infinity) }.buttonStyle(AppButton()).accessibilityIdentifier("pairDevice")
                     Text(L("首次连接，请在 Android 上允许调试。","Allow debugging on Android when connecting for the first time.")).font(.system(size:11)).foregroundStyle(Theme.muted)
                 }
                 AppCard {
@@ -148,17 +139,10 @@ struct RootView: View {
                 Text(L("从远控画面边缘滑动：左右返回、底部 Home、顶部控制中心。iOS 版通过网络 ADB 连接。","Swipe inward at the remote picture edges: Back on either side, Home at the bottom, control center at the top. iOS connects over network ADB.")).font(.system(size:11)).foregroundStyle(Theme.muted).frame(maxWidth:.infinity,alignment:.leading).padding(.horizontal,4)
             }.padding(.horizontal,16).padding(.top,12).padding(.bottom,18).frame(maxWidth:650)
                 .frame(maxWidth:.infinity)
-                .background(GeometryReader { proxy in Color.clear.preference(key:FormBottom.self,value:proxy.frame(in:.named("configuration")).maxY) })
-        }
-        .coordinateSpace(name:"configuration")
-        .background(GeometryReader { proxy in Color.clear.preference(key:FormHeight.self,value:proxy.size.height) })
-        .onPreferenceChange(FormBottom.self) { formBottom = $0 }
-        .onPreferenceChange(FormHeight.self) { formHeight = $0 }
-        .scrollDismissesKeyboard(.interactively)
-        .safeAreaInset(edge:.bottom,spacing:0) { VStack(spacing:4) {
-            if formBottom > formHeight + 20 { Text(L("更多设置可上下滑动查看","Scroll to see more settings")).font(.system(size:10)).foregroundStyle(Theme.muted) }
+        } footer: {
             Button { UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder),to:nil,from:nil,for:nil); model.connect() } label: { HStack { Text(L("连接设备","Connect device")); Image(systemName:"arrow.right") }.font(.system(size:18,weight:.bold)) }.buttonStyle(AppButton(primary:true)).accessibilityIdentifier("connect")
-        }.padding(.horizontal,16).padding(.top,12).padding(.bottom,8).background(.ultraThinMaterial)
-            .overlay(alignment:.top) { LinearGradient(colors:[Theme.background.opacity(0),Theme.background.opacity(0.8)],startPoint:.top,endPoint:.bottom).frame(height:18).offset(y:-18).allowsHitTesting(false) } }
+            .frame(maxWidth:360).padding(.horizontal,24)
+        }
+
     }
 }

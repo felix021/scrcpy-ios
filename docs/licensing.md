@@ -6,6 +6,8 @@
 
 自己拥有版权的原创部分仍可由版权所有者决定其他授权方式；引入他人贡献或第三方代码后，需要分别确认其授权。当前项目统一按 GPL-3.0 维护，不把“收费”解释为“可以省略源码与许可义务”。
 
+新增 TLS / SPAKE2 功能静态链接 Apache-2.0 的 BoringSSL，少量证书与配对原语改编自 GPL-3.0 的 ADBClient-iOS。具体固定版本、改编范围和许可见 [THIRD_PARTY_NOTICES.md](../THIRD_PARTY_NOTICES.md)，声明随 App 打包。
+
 ## Android 服务与随包声明
 
 | 组件 | 版本 | 许可 / 源码 |

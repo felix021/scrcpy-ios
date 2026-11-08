@@ -4,8 +4,9 @@
 
 View and control an Android phone from an iPhone or iPad. Native SwiftUI interface, direct network ADB, and system VideoToolbox decoding; no relay server required.
 
-**0.1.0 development version**, not yet available on the App Store. Requires iOS / iPadOS 16 or later.
+**0.2.0 development version**, not yet available on the App Store. Requires iOS / iPadOS 16 or later.
 
+- Android 11+ wireless debugging: QR code / six-digit pairing code, TLS 1.3 connections, and a customizable client name.
 - Multiple connection profiles, including host, port, video quality and control options.
 - H.264 / H.265 video, touch, multitouch, Back / Home / Recents.
 - Six-row QWERTY keyboard: two control rows, three letter/symbol rows, and a bottom row with Space and Enter. Ctrl / Alt / Shift / Win / Fn; swipe up for symbols, down for capitals.
@@ -19,11 +20,11 @@ View and control an Android phone from an iPhone or iPad. Native SwiftUI interfa
 
 ## Connect
 
-1. Enable USB debugging on Android, run `adb tcpip 5555` from a computer, and put both devices on a trusted network where they can reach each other.
-2. Enter the Android IP / hostname and ADB port, then tap **Connect device**.
-3. Accept the debugging authorization on Android and the local-network permission on iOS.
+1. Enable **Wireless debugging** in Android 11+ Developer options. Tap **Pair wireless debugging** in the app: scan the iOS QR code with Android, or enter the address, port and six-digit code from Android’s pairing dialog. QR discovery requires the same local network.
+2. After pairing, use the discovered connection port, or enter it from Android’s main Wireless debugging page. The connection and pairing ports are different.
+3. Allow Local Network access on iOS. Customize **This device’s name** in Settings to identify the client in Android’s paired-device list.
 
-The app currently uses classic TCP ADB. **Android 11+ wireless-debugging pairing-code / TLS pairing is not implemented.** Direct USB connection from the Android edition is also unavailable on iOS. Audio and microphone support depend on the Android version and vendor; see [usage and limits](docs/usage.md) (Chinese).
+Classic TCP ADB remains available: run `adb tcpip 5555` from a computer, enter the device address / port, and approve debugging on Android. Direct USB connection is unavailable on iOS. See [usage and limits](docs/usage.md) (Chinese).
 
 ## Build
 

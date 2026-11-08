@@ -2,7 +2,7 @@
 
 ## 基础检查
 
-在 Mac 运行 `xcrun swift test`。覆盖 ADB 包校验、触摸布局、组合键释放、文字字节上限、Annex B 拆分、字符键码、配置兼容默认值及 Android RSA 公钥 / 签名。
+在 Mac 先执行 `scripts/build-crypto.sh macosx`，再运行 `xcrun swift test`。覆盖 ADB 包校验、触摸布局、组合键释放、文字字节上限、Annex B 拆分、字符键码、配置兼容默认值及 Android RSA 公钥 / 签名。
 
 完整 UI 测试：
 
@@ -25,7 +25,7 @@ python3 scripts/test-remote.py \
   --output <temporary-artifacts-directory>
 ```
 
-先把当前源码和生成资源同步到 Mac 并执行 `xcodegen generate`。脚本在前台保持独立 SSH 连接，预检端口，测试结束后只关闭自己的隧道。可加 `--codec h265 --audio` 验证 HEVC 与原生声音播放路径。默认只测真实连接；`--only ScrcpyUITests` 运行整个 UI 套件。
+先把当前源码和生成资源同步到 Mac。脚本会在构建锁内准备加密库、生成工程并运行测试；同一构建目录的任务依次执行。脚本在前台保持独立 SSH 连接，预检端口，测试结束后只关闭自己的隧道。可加 `--codec h265 --audio` 验证 HEVC 与原生声音播放路径。默认只测真实连接；`--only ScrcpyUITests` 运行整个 UI 套件。
 
 测试验证首个实际解码帧、触摸、虚拟键盘、手动旋转、横屏布局和断开确认。截图和 xcresult 放构建目录；截图以屏幕为范围，避免横屏时 App 局部截图被错误裁切。要确认输入抵达 Android，还需用被控端测试 Activity 的事件日志核对，不能只看 iOS 按钮变色。
 
@@ -56,3 +56,15 @@ xcrun swift run scrcpy-probe \
 - Release 设备 archive 和未签名 IPA 构建通过。
 
 上述结果不代表 iPhone 真机录音 / 扬声器 / 蓝牙、所有 iPad 尺寸、所有 Android 厂商或 App Store 审核已通过。后续验证记录应与实际测过的功能一致；失败截图和原始日志保存在私有临时目录，不提交整个结果包。
+
+## 无线配对与 0.2.0 验证
+
+新增测试包括随机 QR 挑战、不含空白分隔符的完整设备名称，以及 iPhone / iPad 上的按钮最大宽度、滚动提示出现 / 到底消失和配对入口。
+
+真实配对测试使用 `testWirelessPairing`，通过 `TEST_RUNNER_PAIRING_MODE=qr|code` 传给 xcodebuild，配对码放 `TEST_RUNNER_PAIRING_CODE`。Xcode 会去掉环境变量的 `TEST_RUNNER_` 前缀，测试同时兼容两种形式；不能因漏读变量而静默当作验收通过。未设置测试环境时该项明确跳过。
+
+`Tests/Fixtures/AdbPairingFixture.java` 仅用于明确归属的 Android AVD：通过系统 IAdbManager 启动与 Settings 相同的配对服务、查询连接端口和设备名称。每次开始前先取消并等待旧配对线程，Android 的原生配对服务只允许一个会话，不能并行启动。不要在未经授权的真机使用此测试辅助程序。
+
+2026-11-08 本轮结果：11 项单元测试通过；错误配对码会被 Android 拒绝，不会误判为成功；iPhone 与 iPad 布局测试通过；Android 16 AVD 的真实六位配对码、TLS 连接和视频流探针通过。二维码测试解码 iOS 实际显示的 QR 图像，把内容交给 Android 系统 QR 配对入口，通过 Bonjour 测试转发发现服务，完成配对与原生画面解码。配对码界面另验证 H.265 和远端音频开关保持开启。AVD 的软件 HEVC 编码器会报告限制并降低分辨率，该提示保留在界面中，iOS 对恢复后的实际视频正常解码。Android 配对列表已核对完整名称 `My_iPad_Client`。最后完整 UI 回归为 3 项通过、1 项无线配对测试因未提供配对环境明确跳过；配对码和二维码另分别运行通过。
+
+跨机器时 AVD 的 mDNS 不会直接穿过 SSH 隧道，因此测试用临时 Bonjour 代理发布其转发端口。代理与隧道随测试进程清理，生产 App 仍直接发现并连接 Android。该验证覆盖二维码内容与完整协议链路，未使用实体 Android 摄像头扫码。

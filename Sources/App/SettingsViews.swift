@@ -18,6 +18,11 @@ struct ApplicationSettings: View {
     }
     var body: some View {
         SheetPanel(title:L("设置","Settings"),subtitle:L("语言与应用信息","Language and app information"),model:model) {
+            VStack(alignment:.leading,spacing:8) {
+                Text(L("本机名称","This device’s name")).font(.system(size:13,weight:.semibold))
+                TextField(L("用于 Android 已配对设备列表","Shown in Android’s paired devices"),text:$model.localName).textInputAutocapitalization(.never).autocorrectionDisabled().padding(12).background(Theme.field).clipShape(RoundedRectangle(cornerRadius:12)).accessibilityIdentifier("localDeviceName")
+                Text(L("Android 将显示为：","Shown on Android as: ")+model.advertisedLocalName).font(.system(size:11)).foregroundStyle(Theme.muted)
+            }
             LanguageRow(model:model); Divider().padding(.vertical,5)
             Text(L("关于","About")).font(.system(size:12,weight:.semibold)).foregroundStyle(Theme.muted)
             HStack(spacing:12) { Image("AppMark").resizable().frame(width:48,height:48).clipShape(RoundedRectangle(cornerRadius:12)); VStack(alignment:.leading,spacing:5) { Text(L("远控 · scrcpy","Remote · scrcpy")).font(.system(size:20,weight:.bold)); Text(L("用 iPhone 或 iPad 控制 Android。","Control Android from iPhone or iPad.")).font(.system(size:12)).foregroundStyle(Theme.muted) } }

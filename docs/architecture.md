@@ -6,7 +6,9 @@
 
 视频反向流经 `ScrcpySession → VideoRenderer → VideoToolbox → AVSampleBufferDisplayLayer`；远端声音流经 `AACDecoder → AudioBridge → AVAudioEngine`。麦克风从本机音频引擎采集，转换为 16 kHz 单声道 PCM 后发送给 Android 麦克风服务。
 
-本项目不链接 FFmpeg 或 SDL，不包含 scrcpy-mobile 的代码。网络和协议层也可作为 Swift Package 在 macOS 上运行，使探针与 iOS 客户端复用相同的 ADB、AAC 和会话实现。
+本项目不链接 FFmpeg 或 SDL，不包含 scrcpy-mobile 的代码。无线配对使用固定版本 BoringSSL 提供 TLS 1.3、SPAKE2 和 AES-GCM。C 层使用内存 BIO，Swift 将所有 SSL 操作及输出记录串行执行；网络等待不持有 SSL 锁，因此视频读取不会阻塞控制写入。
+
+网络和协议层也可作为 Swift Package 在 macOS 上运行，使探针与 iOS 客户端复用相同的 ADB、AAC 和会话实现。
 
 ## 主要入口
 
@@ -22,6 +24,10 @@
 | `Sources/App/AudioBridge.swift` | 播放 / 录音图、AAC 播放、16 kHz PCM 采集 |
 | `Sources/App/RemoteCanvas.swift` | 画面缩放坐标、触点、多点与四边手势、硬件键盘 |
 | `Sources/App/VirtualKeyboard.swift` | 六行键盘、滑动字符、修饰键、长按重复 |
+
+无线调试配对先通过 TLS 导出 64 字节密钥材料，与配对秘密一起传入 SPAKE2，再交换 AES-GCM 加密的 8192 字节 PeerInfo。本机 RSA Keychain 身份在配对与后续 STLS 中复用。服务发现只浏览声明的 `_adb-tls-pairing._tcp` 和 `_adb-tls-connect._tcp`，二维码只匹配本次随机生成的服务名。
+
+Android 使用自签名服务证书，证书接收规则按 AOSP ADB 实现；Android 端验证本机已配对的 RSA 身份。这里不使用 Web PKI，也不将此验证方式扩展到其他网络请求。
 
 ## 会话生命周期
 

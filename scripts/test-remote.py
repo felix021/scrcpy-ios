@@ -30,7 +30,8 @@ with (a.output / 'tunnel.log').open('w') as log:
         if tunnel.poll() is not None:
             raise SystemExit('ADB test tunnel failed; see tunnel.log')
         rig = '$HOME/' + shlex.quote(a.rig)
-        command = f'cd {rig} && /usr/bin/nc -z -w 5 127.0.0.1 {a.remote_port} && TEST_RUNNER_SCRCPY_TEST_HOST=127.0.0.1 TEST_RUNNER_SCRCPY_TEST_PORT={a.remote_port} TEST_RUNNER_SCRCPY_TEST_AUDIO={int(a.audio)} TEST_RUNNER_SCRCPY_TEST_CODEC={a.codec} /usr/bin/xcodebuild -project Scrcpy.xcodeproj -scheme Scrcpy -configuration Debug -destination {shlex.quote("platform=iOS Simulator,id="+a.simulator)} -derivedDataPath build/simulator -resultBundlePath build/{result} -parallel-testing-enabled NO -only-testing:{shlex.quote(a.only)} CODE_SIGN_IDENTITY=- test'
+        command = f'cd {rig} && /usr/bin/nc -z -w 5 127.0.0.1 {a.remote_port} && PATH=/opt/homebrew/bin:$PATH scripts/build-crypto.sh iphonesimulator && PATH=/opt/homebrew/bin:$PATH xcodegen generate && TEST_RUNNER_SCRCPY_TEST_HOST=127.0.0.1 TEST_RUNNER_SCRCPY_TEST_PORT={a.remote_port} TEST_RUNNER_SCRCPY_TEST_AUDIO={int(a.audio)} TEST_RUNNER_SCRCPY_TEST_CODEC={a.codec} /usr/bin/xcodebuild -project Scrcpy.xcodeproj -scheme Scrcpy -configuration Debug -destination {shlex.quote("platform=iOS Simulator,id="+a.simulator)} -derivedDataPath build/simulator -resultBundlePath build/{result} -parallel-testing-enabled NO -only-testing:{shlex.quote(a.only)} CODE_SIGN_IDENTITY=- test'
+        command = f'cd {rig} && python3 scripts/with-build-lock.py /bin/sh -c ' + shlex.quote(command)
         with (a.output / 'xcodebuild.log').open('w') as output:
             code = subprocess.run(ssh + [a.mac, command], stdout=output, stderr=subprocess.STDOUT).returncode
         print('Remote result bundle:', a.rig + '/build/' + result, flush=True)

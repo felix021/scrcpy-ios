@@ -11,6 +11,7 @@ public final class ScrcpySession {
     public var onSettingFailed: ((String) -> Void)?
     private let lock = NSLock()
     private var profile: Profile
+    private let clientName: String
     private let identity: AdbIdentity
     private let serverURL: URL, microphoneURL: URL
     private var connection: AdbConnection?, control: AdbStream?, settings: RemoteSettings?
@@ -23,7 +24,8 @@ public final class ScrcpySession {
     private var serverPath: String { "/data/local/tmp/scrcpy-ios-\(id).jar" }
     private var micPath: String { "/data/local/tmp/scrcpy-ios-mic-\(id).jar" }
     private var lastLandscape = false
-    public init(profile: Profile, identity: AdbIdentity, serverURL: URL, microphoneURL: URL) throws {
+    public init(profile: Profile, identity: AdbIdentity, serverURL: URL, microphoneURL: URL, clientName: String = "scrcpy-ios") throws {
+        self.clientName=clientName
         try profile.validate(); var safe = profile; safe.forwardMic = profile.forwardMic && !profile.viewOnly; self.profile = safe; self.identity = identity; self.serverURL = serverURL; self.microphoneURL = microphoneURL
     }
     private var active: Bool { lock.withValue { !closing } }
@@ -46,7 +48,7 @@ public final class ScrcpySession {
     private func run() throws {
         let profile = lock.withValue { self.profile }
         onStatus?("Connecting to ADB · allow debugging on Android")
-        let adb = try AdbConnection(host: profile.host, port: profile.port, identity: identity)
+        let adb = try AdbConnection(host: profile.host, port: profile.port, identity: identity, clientName: clientName)
         try lock.withValue { guard !closing else { throw ScrcpyError.message("Cancelled") }; connection = adb }
         adb.onClose = { [weak self] error in self?.fail(error) }
         try adb.connect(); guard active else { return }

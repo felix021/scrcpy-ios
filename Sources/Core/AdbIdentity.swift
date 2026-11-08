@@ -24,11 +24,15 @@ public final class AdbIdentity {
         return signature as Data
     }
     public var publicKey: SecKey { SecKeyCopyPublicKey(privateKey)! }
-    public func adbPublicKey() throws -> Data {
+    func privateKeyDER() throws -> Data {
+        var error: Unmanaged<CFError>?
+        guard let bytes = SecKeyCopyExternalRepresentation(privateKey,&error) else { throw (error?.takeRetainedValue() as Error?) ?? ScrcpyError.message("Cannot use ADB identity for TLS") }; return bytes as Data
+    }
+    public func adbPublicKey(name: String = "scrcpy-ios") throws -> Data {
         var error: Unmanaged<CFError>?
         guard let raw = SecKeyCopyExternalRepresentation(publicKey, &error) else { throw error!.takeRetainedValue() }
         let (modulus, exponent) = try Self.parseRSA(raw as Data)
-        return try Self.androidPublicKey(modulus: modulus, exponent: exponent)
+        return try Self.androidPublicKey(modulus: modulus, exponent: exponent, name: name)
     }
     public static func parseRSA(_ der: Data) throws -> (Data, UInt32) {
         let bytes = [UInt8](der); var cursor = 0
@@ -55,7 +59,7 @@ public final class AdbIdentity {
         let modulus = try integer(), e = try integer(); guard e.count <= 4, modulus.count == 256 else { throw ScrcpyError.message("ADB requires RSA 2048") }
         return (modulus, e.reduce(UInt32(0)) { ($0 << 8) | UInt32($1) })
     }
-    public static func androidPublicKey(modulus: Data, exponent: UInt32) throws -> Data {
+    public static func androidPublicKey(modulus: Data, exponent: UInt32, name: String = "scrcpy-ios") throws -> Data {
         guard modulus.count == 256, modulus.last! & 1 == 1 else { throw ScrcpyError.message("Invalid RSA modulus") }
         let little = Data(modulus.reversed()), n = (0..<64).map { little.uint32LE($0 * 4) }
         var inverse: UInt32 = 1
@@ -71,6 +75,13 @@ public final class AdbIdentity {
             }
         }
         var out = Data(); out.appendLE(64); out.appendLE(0 &- inverse); out += little; for value in rr { out.appendLE(value) }; out.appendLE(exponent)
-        return Data((out.base64EncodedString() + " scrcpy-ios\0").utf8)
+        return Data((out.base64EncodedString() + " " + (try Self.deviceLabel(name)) + "\0").utf8)
+    }
+    public static func deviceLabel(_ name: String) throws -> String {
+        let clean=name.replacingOccurrences(of:"\0",with:"").trimmingCharacters(in:.whitespacesAndNewlines)
+        // Android's paired-device parser splits on Unicode whitespace too.
+        let label=String(clean.map { $0.isWhitespace ? Character("_") : $0 })
+        guard !label.isEmpty, label.utf8.count <= 120 else { throw ScrcpyError.message("Device name must contain 1–120 UTF-8 bytes") }
+        return label
     }
 }

@@ -28,6 +28,7 @@ private final class ProfileStore {
     @Published var bitrate = "6"
     @Published var fps = "60"
     @Published var language = UserDefaults.standard.string(forKey: "language") ?? "system" { didSet { UserDefaults.standard.set(language, forKey: "language") } }
+    @Published var localName = UserDefaults.standard.string(forKey:"localName") ?? UIDevice.current.name { didSet { UserDefaults.standard.set(localName,forKey:"localName") } }
     @Published var profiles: [Profile] = []
     @Published var active = false
     @Published var ready = false
@@ -38,6 +39,7 @@ private final class ProfileStore {
     @Published var videoHeight = 2340
     @Published var renderer = VideoRenderer(codec: "h264")
     @Published var deviceName = ""
+    var advertisedLocalName: String { (try? AdbIdentity.deviceLabel(localName)) ?? L("名称需为 1–120 字节","Name must contain 1–120 UTF-8 bytes") }
     var effectiveLocale: Locale { language == "system" ? .current : Locale(identifier: language == "zh" ? "zh-Hans" : "en") }
     private var store: ProfileStore?, session: ScrcpySession?, audio: AudioBridge?
     private var generation = UUID()
@@ -126,7 +128,7 @@ private final class ProfileStore {
     private func begin(_ value: Profile) {
         do {
             guard let server = Bundle.main.url(forResource: "scrcpy-server", withExtension: "jar"), let microphone = Bundle.main.url(forResource: "microphone-server", withExtension: "jar") else { throw ScrcpyError.message(L("缺少远端服务资源，请先运行构建脚本", "Missing Android services; run the resource preparation script")) }
-            let core = try ScrcpySession(profile: value, identity: AdbIdentity(), serverURL: server, microphoneURL: microphone)
+            let core = try ScrcpySession(profile: value, identity: AdbIdentity(), serverURL: server, microphoneURL: microphone, clientName: localName)
             generation = UUID(); let token = generation; profile = value; if value.viewOnly { profile.forwardMic = false }; try persist()
             let renderer = VideoRenderer(codec: value.codec), audio = AudioBridge()
             self.renderer = renderer; self.audio = audio; session = core; active = true; ready = false; status = L("正在连接…", "Connecting…"); notice = nil; keyboardVisible = false

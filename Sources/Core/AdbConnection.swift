@@ -1,5 +1,6 @@
 import Foundation
 import Network
+import AdbCrypto
 
 public struct AdbPacket {
     public let command: UInt32
@@ -21,7 +22,9 @@ public struct AdbPacket {
     private init(command: UInt32, arg0: UInt32, arg1: UInt32, payload: Data) { self.command = command; self.arg0 = arg0; self.arg1 = arg1; self.payload = payload }
 }
 
-private final class SocketTransport {
+final class SocketTransport {
+    private let tlsLock = NSLock(), rawWriteLock = NSLock()
+    private var tls: AdbTLS?
     let connection: NWConnection
     private let queue = DispatchQueue(label: "scrcpy.socket")
     init(host: String, port: Int) throws {
@@ -45,48 +48,75 @@ private final class SocketTransport {
         guard ready.wait(timeout: .now() + 10) == .success else { connection.cancel(); throw ScrcpyError.message("ADB TCP connection timed out") }
         if let error = lock.withValue({ result }) { throw error }
     }
+    private func rawRead(_ maximum: Int) throws -> Data {
+        let done = DispatchSemaphore(value:0); var bytes: Data?; var failure: Error?
+        connection.receive(minimumIncompleteLength:1,maximumLength:maximum) { data,_,_,error in bytes=data; failure=error; done.signal() }; done.wait()
+        if let bytes, !bytes.isEmpty { return bytes }; throw failure ?? ScrcpyError.message("ADB connection closed")
+    }
     func read(_ length: Int) throws -> Data {
         guard length >= 0 && length <= 1024 * 1024 else { throw ScrcpyError.message("Invalid read length") }
         var out = Data()
         while out.count < length {
-            let done = DispatchSemaphore(value: 0); var bytes: Data?; var failure: Error?; var complete = false
-            connection.receive(minimumIncompleteLength: 1, maximumLength: length - out.count) { data, _, ended, error in bytes = data; failure = error; complete = ended; done.signal() }
-            // The session cancellation unblocks pending I/O. Active control and
-            // settings channels may remain idle indefinitely without being EOF.
-            done.wait()
-            if let bytes, !bytes.isEmpty { out += bytes }
-            else if let failure { throw failure }
-            else if complete { throw ScrcpyError.message("ADB connection closed") }
-            else { throw ScrcpyError.message("Empty ADB read") }
+            if let tls {
+                var buffer = [UInt8](repeating:0,count:length-out.count)
+                let count = try tlsLock.withValue { () -> Int in
+                    let value = Int(sc_tls_read(tls.context,&buffer,buffer.count)); let pending=tls.output(); if !pending.isEmpty { try rawWrite(pending) }; return value
+                }
+                if count > 0 { out.append(contentsOf:buffer.prefix(count)) }
+                else if count == -2 { let bytes=try rawRead(65536); try tlsLock.withValue { try tls.feed(bytes) } }
+                else { throw AdbTLS.error() }
+            } else { out += try rawRead(length-out.count) }
+
         }
         return out
     }
-    func write(_ data: Data) throws {
+    private func rawWrite(_ data: Data) throws {
+        try rawWriteLock.withValue { try sendRaw(data) }
+    }
+    private func sendRaw(_ data: Data) throws {
         let done = DispatchSemaphore(value: 0); var failure: Error?
         connection.send(content: data, completion: .contentProcessed { error in failure = error; done.signal() })
         guard done.wait(timeout: .now() + 15) == .success else { connection.cancel(); throw ScrcpyError.message("ADB write timed out") }
         if let failure { throw failure }
     }
+    func write(_ data: Data) throws {
+        guard let tls else { try rawWrite(data); return }
+        try tlsLock.withValue {
+            let written = data.withUnsafeBytes { sc_tls_write(tls.context,$0.bindMemory(to:UInt8.self).baseAddress,data.count) }
+            guard written == data.count else { throw AdbTLS.error() }
+            let pending = tls.output(); if !pending.isEmpty { try rawWrite(pending) }
+        }
+    }
+    func startTLS(identity: AdbIdentity) throws {
+        let session=try AdbTLS(identity:identity); tls=session
+        while true {
+            let status=try tlsLock.withValue { () -> Int32 in let result=sc_tls_handshake(session.context); let pending=session.output(); if !pending.isEmpty { try rawWrite(pending) }; return result }
+            if status == 1 { return }; if status < 0 { throw AdbTLS.error() }
+            let bytes=try rawRead(65536); try tlsLock.withValue { try session.feed(bytes) }
+        }
+    }
+    func exportedKey() throws -> Data { try tlsLock.withValue { guard let tls else { throw ScrcpyError.message("No TLS session") }; return try tls.exportedKey() } }
     func close() { connection.cancel() }
 }
 
 public final class AdbConnection {
     private let transport: SocketTransport
     private let identity: AdbIdentity
+    private let clientName: String
     private let lock = NSLock(), writeLock = NSLock()
     private var streams: [UInt32: AdbStream] = [:]
     private var nextID: UInt32 = 1
     private var closed = false
     public private(set) var maxData = 256 * 1024
     public var onClose: ((Error) -> Void)?
-    public init(host: String, port: Int, identity: AdbIdentity) throws { transport = try SocketTransport(host: host, port: port); self.identity = identity }
+    public init(host: String, port: Int, identity: AdbIdentity, clientName: String = "scrcpy-ios") throws { self.clientName = clientName; transport = try SocketTransport(host: host, port: port); self.identity = identity }
     public func connect() throws {
         try transport.connect()
         let timeout = DispatchWorkItem { [weak self] in self?.close() }
         DispatchQueue.global().asyncAfter(deadline: .now() + 60, execute: timeout)
         defer { timeout.cancel() }
         try send(AdbPacket("CNXN", 0x01000000, 256 * 1024, Data("host::\0".utf8)))
-        var signed = false
+        var signed = false, upgraded = false
         while true {
             let packet = try receive()
             if packet.command == AdbPacket.code("CNXN") {
@@ -94,9 +124,13 @@ public final class AdbConnection {
                 maxData = min(Int(packet.arg1), 1024 * 1024)
                 Thread.detachNewThread { [self] in pump() }; return
             }
+            if packet.command == AdbPacket.code("STLS") {
+                guard !upgraded else { throw ScrcpyError.message("Repeated ADB TLS upgrade") }; upgraded=true
+                try send(AdbPacket("STLS",0x01000000)); try transport.startTLS(identity:identity); continue
+            }
             if packet.command == AdbPacket.code("AUTH"), packet.arg0 == 1 {
                 if !signed { try send(AdbPacket("AUTH", 2, 0, identity.sign(packet.payload))); signed = true }
-                else { try send(AdbPacket("AUTH", 3, 0, identity.adbPublicKey())) }
+                else { try send(AdbPacket("AUTH", 3, 0, identity.adbPublicKey(name: clientName))) }
             } else { throw ScrcpyError.message("Unexpected ADB authentication response") }
         }
     }

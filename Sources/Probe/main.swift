@@ -14,7 +14,14 @@ profile.forwardAudio = CommandLine.arguments.contains("--audio"); profile.forwar
 let done = DispatchSemaphore(value: 0), lock = NSLock()
 var frames = 0, audio = 0, width = 0, height = 0, failed = false
 var audioDecoder: AACDecoder?; var decodedAudioSamples = 0; var audioPower = 0.0
-let session = try ScrcpySession(profile: profile, identity: AdbIdentity(persistent: false), serverURL: URL(fileURLWithPath: server), microphoneURL: URL(fileURLWithPath: mic))
+let identity = try AdbIdentity(persistent: false)
+if let code = ProcessInfo.processInfo.environment["SCRCPY_PAIR_CODE"], let port=Int(option("--pair-port",fallback:"0")!), port>0 {
+    do {
+        let pair=try AdbPairingClient(host:host,port:port,identity:identity,clientName:option("--name",fallback:"scrcpy iOS probe")!)
+        print("PAIRING_STARTED"); fflush(stdout); _ = try pair.pair(password:code); print("PAIRING_SUCCESS"); fflush(stdout)
+    } catch { print("PAIRING_FAILED",error.localizedDescription); exit(1) }
+}
+let session = try ScrcpySession(profile: profile, identity: identity, serverURL: URL(fileURLWithPath: server), microphoneURL: URL(fileURLWithPath: mic))
 session.onStatus = { print("STATUS", $0); fflush(stdout) }
 session.onWarning = { print("WARNING", $0); fflush(stdout) }
 session.onFailure = { print("FAIL", $0.localizedDescription); failed = true; done.signal() }

@@ -22,13 +22,61 @@ final class ScrcpyUITests: XCTestCase {
         app.buttons["deleteProfile"].tap(); XCTAssertTrue(app.buttons["confirmAction"].exists); app.buttons["confirmAction"].tap()
         XCTAssertTrue(app.staticTexts["No saved profiles"].waitForExistence(timeout:5)); snapshot(app,"profiles-empty")
     }
+    func testScrollCueAndPairingEntry() throws {
+        let app=launch()
+        XCTAssertTrue(app.buttons["connect"].waitForExistence(timeout:15))
+        XCTAssertLessThanOrEqual(app.buttons["connect"].frame.width,360)
+        if app.frame.width > 600 { snapshot(app,"ipad-configuration-portrait"); XCUIDevice.shared.orientation = .landscapeLeft }
+        let hint=app.buttons["formScrollHint"]
+        XCTAssertTrue(hint.waitForExistence(timeout:5)); snapshot(app,"configuration-scroll-cue")
+        hint.tap()
+        let gone=NSPredicate(format:"exists == false")
+        expectation(for:gone,evaluatedWith:hint); waitForExpectations(timeout:5)
+        XCTAssertTrue(app.buttons["connect"].isHittable)
+        for _ in 0..<4 { app.scrollViews.firstMatch.swipeDown() }
+        app.buttons["pairDevice"].tap()
+        XCTAssertTrue(app.images["pairingQRCode"].waitForExistence(timeout:5)); snapshot(app,"wireless-pairing-qr")
+        app.buttons["pairModeCode"].tap()
+        XCTAssertTrue(app.textFields["pairingCode"].waitForExistence(timeout:5))
+        app.buttons["pairCodeConfirm"].tap()
+        XCTAssertTrue(app.staticTexts["Enter the six-digit code shown on Android"].waitForExistence(timeout:5)); XCUIDevice.shared.orientation = .portrait
+    }
+    func testWirelessPairing() throws {
+        let env=ProcessInfo.processInfo.environment
+        guard let mode=env["PAIRING_MODE"] ?? env["TEST_RUNNER_PAIRING_MODE"] else { throw XCTSkip("Requires an owned wireless-debugging Android and Bonjour test relay") }
+        let app=launch()
+        if mode == "code" { app.buttons["codec"].tap(); app.buttons["H.265"].tap() }
+        app.buttons["appSettings"].tap(); replace(app.textFields["localDeviceName"],"My iPad Client"); app.buttons["settingsDone"].tap()
+        app.buttons["pairDevice"].tap()
+        if mode == "code" {
+            app.buttons["pairModeCode"].tap()
+            replace(app.textFields["pairingHost"],"127.0.0.1"); replace(app.textFields["pairingPort"],"15556")
+            replace(app.textFields["pairingCode"],env["PAIRING_CODE"] ?? env["TEST_RUNNER_PAIRING_CODE"] ?? "")
+            app.buttons["pairCodeConfirm"].tap()
+        } else {
+            XCTAssertTrue(app.images["pairingQRCode"].waitForExistence(timeout:10)); print("PAIR_QR_READY"); snapshot(app,"pairing-live-qr")
+        }
+        XCTAssertTrue(app.descendants(matching:.any).matching(identifier:"pairingSuccess").firstMatch.waitForExistence(timeout:80)); snapshot(app,"wireless-paired")
+        XCTAssertEqual(app.textFields["pairedConnectPort"].value as? String,"15555")
+        app.buttons["connectPaired"].tap()
+        let state=app.staticTexts["connectionState"]
+        XCTAssertTrue(state.waitForExistence(timeout:15))
+        let deadline=Date().addingTimeInterval(90)
+        while state.value as? String != "ready" && Date()<deadline { sleep(1) }
+        XCTAssertEqual(state.value as? String,"ready"); snapshot(app,"wireless-tls-video")
+        app.buttons["runtimeSettings"].tap(); XCTAssertTrue(app.buttons["settingsScrollHint"].waitForExistence(timeout:5)); XCTAssertEqual(app.switches["opt.audio"].value as? String,"1"); snapshot(app,"runtime-settings-scroll-cue")
+        app.buttons["settingsScrollHint"].tap()
+        expectation(for:NSPredicate(format:"exists == false"),evaluatedWith:app.buttons["settingsScrollHint"]); waitForExpectations(timeout:5)
+        XCTAssertTrue(app.buttons["languagePicker"].isHittable)
+        app.buttons["disconnect"].tap(); app.buttons["confirmAction"].tap(); XCTAssertTrue(app.buttons["connect"].waitForExistence(timeout:10))
+    }
     func testRealAndroidConnection() throws {
         let environment = ProcessInfo.processInfo.environment
         guard let host = environment["SCRCPY_TEST_HOST"] ?? environment["TEST_RUNNER_SCRCPY_TEST_HOST"], !host.isEmpty else { throw XCTSkip("Set SCRCPY_TEST_HOST to an owned Android target") }
         let app = XCUIApplication(); app.launchArguments = ["--ui-test-reset","--autoconnect","-AppleLanguages","(en)"]
         app.launchEnvironment["SCRCPY_TEST_HOST"] = host
-        app.launchEnvironment["SCRCPY_TEST_AUDIO"] = environment["TEST_RUNNER_SCRCPY_TEST_AUDIO"] ?? "0"
-        app.launchEnvironment["SCRCPY_TEST_CODEC"] = environment["TEST_RUNNER_SCRCPY_TEST_CODEC"] ?? "h264"
+        app.launchEnvironment["SCRCPY_TEST_AUDIO"] = environment["SCRCPY_TEST_AUDIO"] ?? environment["TEST_RUNNER_SCRCPY_TEST_AUDIO"] ?? "0"
+        app.launchEnvironment["SCRCPY_TEST_CODEC"] = environment["SCRCPY_TEST_CODEC"] ?? environment["TEST_RUNNER_SCRCPY_TEST_CODEC"] ?? "h264"
         app.launchEnvironment["SCRCPY_TEST_PORT"] = environment["SCRCPY_TEST_PORT"] ?? environment["TEST_RUNNER_SCRCPY_TEST_PORT"] ?? "5555"
         addUIInterruptionMonitor(withDescription:"Local network") { alert in
             if alert.buttons["Allow"].exists { alert.buttons["Allow"].tap(); return true }; return false
@@ -42,7 +90,13 @@ final class ScrcpyUITests: XCTestCase {
             sleep(1)
         }
         XCTAssertEqual(state.value as? String,"ready")
-        XCTAssertFalse(app.descendants(matching:.any).matching(identifier:"notice").firstMatch.exists)
+        let warning=app.staticTexts.matching(identifier:"notice").firstMatch
+        if warning.exists {
+            snapshot(app,"connection-warning")
+            // AVD software HEVC can negotiate a lower supported resolution.
+            // Keep the warning visible and still require actual decoded video.
+            XCTAssertTrue(warning.label.contains("Applying video encoder constraints"),warning.label)
+        }
         snapshot(app,"remote-portrait")
         app.descendants(matching:.any).matching(identifier:"remoteSurface").firstMatch.tap()
         app.buttons["keyboard"].tap(); XCTAssertTrue(app.buttons["key.Ctrl"].waitForExistence(timeout:5))
@@ -50,7 +104,7 @@ final class ScrcpyUITests: XCTestCase {
         app.buttons["key.Fn"].tap(); app.buttons["key.Menu"].tap()
         snapshot(app,"keyboard-portrait")
         app.buttons["keyboard"].tap()
-        app.buttons["runtimeSettings"].tap(); XCTAssertTrue(app.buttons["rotateLeft"].waitForExistence(timeout:5)); app.buttons["rotateRight"].tap(); sleep(2); snapshot(app,"remote-manual-rotation")
+        app.buttons["runtimeSettings"].tap(); XCTAssertTrue(app.buttons["rotateLeft"].waitForExistence(timeout:5)); XCTAssertTrue(app.buttons["settingsScrollHint"].exists); snapshot(app,"runtime-scroll-cue"); app.buttons["rotateRight"].tap(); sleep(2); snapshot(app,"remote-manual-rotation")
         app.buttons["runtimeDone"].tap()
         XCUIDevice.shared.orientation = .landscapeLeft; sleep(3); snapshot(app,"remote-landscape")
         let surface = app.descendants(matching:.any).matching(identifier:"remoteSurface").firstMatch
