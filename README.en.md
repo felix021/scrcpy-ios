@@ -1,10 +1,10 @@
 # scrcpy-ios
 
-[简体中文](README.md) · [Website](https://oh-my-term.cn/scrcpy-ios/en/) · [Documentation](docs/README.md) · [Android app](https://github.com/moteng-network/scrcpy-apk)
+[简体中文](README.md) · [Website](https://scrcpy.oh-my-term.cn/en/) · [Documentation](docs/README.md) · [Android app](https://github.com/moteng-network/scrcpy-apk)
 
 View and control an Android phone from an iPhone or iPad. Native SwiftUI interface, direct network ADB, and system VideoToolbox decoding; no relay server required.
 
-**0.2.0 development version**, not yet available on the App Store. Requires iOS / iPadOS 16 or later.
+**0.2.1 development version**, not yet available on the App Store. Requires iOS / iPadOS 16 or later.
 
 - Android 11+ wireless debugging: QR code / six-digit pairing code, TLS 1.3 connections, and a customizable client name.
 - Multiple connection profiles, including host, port, video quality and control options.

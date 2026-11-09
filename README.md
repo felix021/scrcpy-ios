@@ -1,10 +1,10 @@
 # scrcpy-ios
 
-[English](README.en.md) · [项目主页](https://oh-my-term.cn/scrcpy-ios/) · [文档](docs/README.md) · [Android 版](https://github.com/moteng-network/scrcpy-apk)
+[English](README.en.md) · [项目主页](https://scrcpy.oh-my-term.cn/) · [文档](docs/README.md) · [Android 版](https://github.com/moteng-network/scrcpy-apk)
 
 用 iPhone 或 iPad 查看和控制 Android 手机。原生 SwiftUI 界面，通过网络 ADB 连接；视频使用系统 VideoToolbox 解码，无需中转服务器。
 
-当前版本为 **0.2.0 开发版**，尚未发布到 App Store。最低 iOS / iPadOS 16。
+当前版本为 **0.2.1 开发版**，尚未发布到 App Store。最低 iOS / iPadOS 16。
 
 - Android 11+ 无线调试：二维码 / 6 位配对码，配对后通过 TLS 1.3 加密连接；本机名称可自定义。
 - 多主机连接配置，保存主机、端口、画质与控制选项。
