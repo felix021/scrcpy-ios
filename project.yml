@@ -18,7 +18,7 @@ targets:
     - Sources/Core
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: cn.felix021.scrcpy.ios.core
+        PRODUCT_BUNDLE_IDENTIFIER: cn.oh-my-term.scrcpy.core
         GENERATE_INFOPLIST_FILE: true
         SKIP_INSTALL: true
         SWIFT_INCLUDE_PATHS:
@@ -44,7 +44,7 @@ targets:
     - target: ScrcpyCore
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: cn.felix021.scrcpy.ios
+        PRODUCT_BUNDLE_IDENTIFIER: cn.oh-my-term.scrcpy
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         TARGETED_DEVICE_FAMILY: 1,2
     info:
@@ -81,7 +81,7 @@ targets:
     - target: Scrcpy
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: cn.felix021.scrcpy.ios.uitests
+        PRODUCT_BUNDLE_IDENTIFIER: cn.oh-my-term.scrcpy.uitests
         GENERATE_INFOPLIST_FILE: true
   AdbCrypto:
     type: library.static

@@ -1,4 +1,4 @@
-iOS client source (GPL-3.0): https://github.com/felix021/scrcpy-ios
+iOS client source (GPL-3.0): https://github.com/moteng-network/scrcpy-ios
 Android microphone service source (GPL-3.0): https://github.com/felix021/scrcpy-apk/tree/v1.0.0
 Official scrcpy server source (Apache-2.0): https://github.com/Genymobile/scrcpy/tree/v5.0.1
 The Android microphone DEX also contains unused BSD-licensed adblib classes; their license is included alongside this file.

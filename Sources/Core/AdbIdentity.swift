@@ -4,7 +4,7 @@ import Security
 public final class AdbIdentity {
     private let privateKey: SecKey
     public init(persistent: Bool = true) throws {
-        let tag = Data("cn.felix021.scrcpy.ios.adb-rsa".utf8)
+        let tag = Data("cn.oh-my-term.scrcpy.adb-rsa".utf8)
         if persistent {
             var found: CFTypeRef?
             let status = SecItemCopyMatching([kSecClass: kSecClassKey, kSecAttrApplicationTag: tag, kSecAttrKeyType: kSecAttrKeyTypeRSA, kSecReturnRef: true] as CFDictionary, &found)

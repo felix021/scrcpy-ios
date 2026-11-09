@@ -11,6 +11,7 @@
 - `Tests/CoreTests/`、`Tests/UITests/`：协议边界和界面验收。
 - `Resources/`：许可文本与下载后生成的 Android 服务；JAR 不进 Git。
 - `project.yml`、`Package.swift`、`scripts/`：工程生成、构建、Ad Hoc 签名与验证。生成的 Xcode 工程不进 Git。
+- `site/`：GitHub Pages 项目主页、隐私政策与支持；静态文件随主分支发布，见 `docs/publishing.md`。
 - `docs/`：分主题说明；本机配置、SSH 别名、设备编号和签名只放私有配置仓库。
 
 ## 修改规则

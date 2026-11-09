@@ -1,6 +1,6 @@
 # scrcpy-ios
 
-[English](README.en.md) · [文档](docs/README.md) · [Android 版](https://github.com/felix021/scrcpy-apk)
+[English](README.en.md) · [项目主页](https://moteng-network.github.io/scrcpy-ios/) · [文档](docs/README.md) · [Android 版](https://github.com/felix021/scrcpy-apk)
 
 用 iPhone 或 iPad 查看和控制 Android 手机。原生 SwiftUI 界面，通过网络 ADB 连接；视频使用系统 VideoToolbox 解码，无需中转服务器。
 

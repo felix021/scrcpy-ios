@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0d141b" />
+    <title>隐私政策 / Privacy — Remote · scrcpy</title>
+    <meta
+      name="description"
+      content="Remote · scrcpy privacy policy / 远控隐私政策"
+    />
+    <meta property="og:title" content="隐私政策 / Privacy — Remote · scrcpy" />
+    <meta
+      property="og:description"
+      content="Remote · scrcpy privacy policy / 远控隐私政策"
+    />
+    <meta property="og:type" content="website" />
+    <link rel="icon" type="image/svg+xml" href="assets/logo.svg" />
+    <link rel="stylesheet" href="assets/style.css" />
+  </head>
+  <body>
+    <a class="skip" href="#main">跳到正文</a>
+    <header class="header">
+      <nav class="wrap nav" aria-label="主导航">
+        <a class="brand" href="./"
+          ><img src="assets/logo.svg" width="38" height="38" alt="" />Remote
+          <span style="color: var(--muted); font-weight: 400">· scrcpy</span></a
+        >
+        <div class="navlinks">
+          <a class="desktop" href="https://github.com/moteng-network/scrcpy-ios"
+            >GitHub ↗</a
+          ><a class="language" href="./">首页 / Home</a>
+        </div>
+      </nav>
+    </header>
+    <main id="main" class="wrap legal">
+      <h1>隐私政策 / Privacy Policy</h1>
+      <p class="language-note">
+        Remote · scrcpy（远控 · scrcpy）<br />更新日期 / Last updated:
+        2026-11-09<br /><a href="#english" lang="en">Read in English ↓</a>
+      </p>
+      <h2>我们处理什么信息</h2>
+      <p>
+        App 在你的客户端与授权的 Android
+        设备之间传输屏幕画面、远端系统声音、触摸、按键和你发送的文字。你主动开启麦克风转发后，本机录音才会发送到当前连接的
+        Android；默认关闭。App
+        不会将这些内容发送到我们的服务器，也不会自动保存会话录音或录像。
+      </p>
+      <h2>保存在设备上的信息</h2>
+      <p>
+        连接地址、端口、主机名称、画质与控制选项保存在 App 的本地配置中；ADB
+        私钥保存在系统
+        Keychain（iOS）或应用私有存储（Android）。这些身份用于被控设备授权，App
+        不会主动上传它们。iOS 配置不参与 iCloud 备份，ADB
+        私钥仅限本机使用。配对码仅用于当次配对，不作为连接配置保存。
+      </p>
+      <h2>权限与设备连接</h2>
+      <p>
+        本地网络权限用于发现、配对和连接
+        Android；麦克风权限仅在你开启麦克风转发时请求；Android 的 USB
+        授权仅用于你选择的 USB ADB
+        设备。你可以在系统设置中撤销权限。连接到你不信任的 Android
+        之前，请先确认其身份；它会收到你主动输入的内容和开启转发后的录音。
+      </p>
+      <h2>收集、共享与第三方服务</h2>
+      <p>
+        App 不要求注册账号，不包含广告、统计分析或跟踪
+        SDK，也不向开发者回传使用数据。打开 App
+        内的网站或代码仓库链接时，系统浏览器会连接相应网站，由该网站按自己的隐私政策处理访问数据。本项目网站托管于
+        GitHub Pages，不使用分析脚本、Cookie 或外部字体；GitHub
+        作为托管服务可能处理访问 IP、浏览器信息等基础请求数据，详见
+        <a
+          href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement"
+          >GitHub 隐私声明</a
+        >。App Store 的购买与下载由 Apple 提供，我们不会获得你的付款卡信息。
+      </p>
+      <h2>你的选择</h2>
+      <p>
+        你可以删除保存的连接配置、关闭声音或麦克风转发，并在 Android
+        的无线调试设置中撤销配对或 ADB 授权。卸载 App 会移除其本地配置；iOS
+        Keychain 中的配对密钥可能由系统保留，撤销 Android
+        上的授权可阻止其再次连接。
+      </p>
+      <h2>联系我们</h2>
+      <p>
+        隐私问题可通过
+        <a href="https://github.com/moteng-network/scrcpy-ios/issues"
+          >GitHub Issues</a
+        >
+        联系项目维护者。Issue
+        是公开的，请不要附带私钥、配对码、个人网络地址或录音内容。政策更新会在本页注明日期。
+      </p>
+      <hr />
+      <div id="english" lang="en">
+        <h2>What the app processes</h2>
+        <p>
+          Remote · scrcpy sends screen video, Android audio, touch, keystrokes
+          and text between your client and an Android device you authorize.
+          Local microphone audio is sent to that Android device only after you
+          enable forwarding; it is off by default. The app does not send this
+          content to our servers or automatically save session recordings.
+        </p>
+        <h2>Information stored on your device</h2>
+        <p>
+          Addresses, ports, device names, quality and control preferences are
+          saved locally. ADB private keys are stored in the system Keychain on
+          iOS, or app-private storage on Android. The app does not upload these
+          identities. iOS configuration files are excluded from iCloud backup,
+          and its private key is device-only. Pairing codes are used for the
+          current pairing operation and are not saved in connection profiles.
+        </p>
+        <h2>Permissions and connections</h2>
+        <p>
+          Local-network permission enables Android discovery, pairing and
+          connections. Microphone permission is requested when you enable
+          microphone forwarding. Android USB permission is used for the USB ADB
+          device you select. You can revoke permissions in system settings.
+          Connect only to Android devices you trust: they receive your input and
+          any microphone audio you choose to forward.
+        </p>
+        <h2>Collection, sharing and third parties</h2>
+        <p>
+          No account is required. The app contains no advertising, analytics or
+          tracking SDKs and sends no usage data to the developer. External links
+          open websites in your browser; those websites handle requests under
+          their own policies. This website is hosted by GitHub Pages, with no
+          analytics scripts, cookies or external fonts. GitHub may process basic
+          request data such as IP addresses and browser information; see the
+          <a
+            href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement"
+            >GitHub Privacy Statement</a
+          >. Apple handles App Store purchases and downloads. We do not receive
+          your payment-card details.
+        </p>
+        <h2>Your choices</h2>
+        <p>
+          Delete saved profiles, turn off audio or microphone forwarding, and
+          revoke pairing or ADB authorization in Android’s debugging settings.
+          Uninstalling the app removes local configuration. iOS may retain
+          Keychain keys; revoking authorization on Android prevents those keys
+          from reconnecting.
+        </p>
+        <h2>Contact</h2>
+        <p>
+          Contact the maintainers via
+          <a href="https://github.com/moteng-network/scrcpy-ios/issues"
+            >GitHub Issues</a
+          >. Issues are public: do not include private keys, pairing codes,
+          personal network addresses or recordings. Updates to this policy will
+          be dated on this page.
+        </p>
+      </div>
+    </main>
+    <footer class="wrap footer">
+      <span
+        >Remote · scrcpy /
+        <a href="https://github.com/moteng-network">Moteng Network</a></span
+      >
+      <div class="footer-links">
+        <a href="privacy.html">隐私政策</a><a href="support.html">使用与支持</a
+        ><a href="https://github.com/moteng-network/scrcpy-ios"
+          >源码 · GPL-3.0</a
+        >
+      </div>
+    </footer>
+  </body>
+</html>

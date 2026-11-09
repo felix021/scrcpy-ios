@@ -31,7 +31,9 @@ Android JAR 只上传到被控 Android，由 Android 的 `app_process` 加载，
 scripts/build-ios.sh device
 ```
 
-产物为 `build/Scrcpy.xcarchive` 和 `build/Scrcpy-unsigned.ipa`。**未签名 IPA 不能直接安装**。使用自己的 Apple 开发者账号、证书和与包名匹配的 provisioning profile 签名；包名默认 `cn.felix021.scrcpy.ios`，可在本地修改 `project.yml`。
+产物为 `build/Scrcpy.xcarchive` 和 `build/Scrcpy-unsigned.ipa`。**未签名 IPA 不能直接安装**。使用自己的 Apple 开发者账号、证书和与包名匹配的 provisioning profile 签名；包名默认 `cn.oh-my-term.scrcpy`，可在本地修改 `project.yml`。
+
+Bundle ID 已从早期开发版的 `cn.felix021.scrcpy.ios` 调整为 `cn.oh-my-term.scrcpy`。它是独立的应用身份：需要匹配的新 App ID 和描述文件，不能使用旧包的签名配置直接覆盖安装。旧版的连接配置和 Keychain 配对身份不会自动迁移；新包需要重新配置和配对。
 
 也可用 Xcode 打开生成工程，在 Signing & Capabilities 设置自己的 Team，选择已授权设备运行。不要沿用其他项目的 provisioning profile；App ID 与签名权限需匹配。
 

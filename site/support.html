@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0d141b" />
+    <title>使用与支持 / Support — Remote · scrcpy</title>
+    <meta
+      name="description"
+      content="Connection help and support for Remote · scrcpy"
+    />
+    <meta
+      property="og:title"
+      content="使用与支持 / Support — Remote · scrcpy"
+    />
+    <meta
+      property="og:description"
+      content="Connection help and support for Remote · scrcpy"
+    />
+    <meta property="og:type" content="website" />
+    <link rel="icon" type="image/svg+xml" href="assets/logo.svg" />
+    <link rel="stylesheet" href="assets/style.css" />
+  </head>
+  <body>
+    <a class="skip" href="#main">跳到正文</a>
+    <header class="header">
+      <nav class="wrap nav" aria-label="主导航">
+        <a class="brand" href="./"
+          ><img src="assets/logo.svg" width="38" height="38" alt="" />Remote
+          <span style="color: var(--muted); font-weight: 400">· scrcpy</span></a
+        >
+        <div class="navlinks">
+          <a class="desktop" href="https://github.com/moteng-network/scrcpy-ios"
+            >GitHub ↗</a
+          ><a class="language" href="./">首页 / Home</a>
+        </div>
+      </nav>
+    </header>
+    <main id="main" class="wrap legal">
+      <h1>使用与支持 / Support</h1>
+      <p class="language-note">
+        iPhone、iPad 与 Android 客户端<br /><a href="#english" lang="en"
+          >Read in English ↓</a
+        >
+      </p>
+      <h2>连接前需要准备什么？</h2>
+      <p>
+        被控端必须是你有权操作的 Android。推荐 Android 11+
+        的无线调试：先开启开发者选项和无线调试，再选择二维码或配对码方式。二维码由客户端显示，用
+        Android
+        扫描；连接端口与配对端口不同。两台设备需要互通，二维码发现需要同一局域网。
+      </p>
+      <h2>配对成功，但连接失败？</h2>
+      <p>
+        确认填写的是无线调试主页面的连接端口，而非临时配对端口。检查 Android
+        是否仍连接 Wi-Fi、无线调试是否开启，以及 iOS 的本地网络权限。切换 Wi-Fi
+        或重开无线调试后，连接端口可能改变。
+      </p>
+      <h2>支持 USB 或互联网连接吗？</h2>
+      <p>
+        Android 客户端支持兼容 USB Host 与线材的 USB ADB，首次需要授权；iOS
+        暂不支持 USB 直连。跨网络可自行使用 Tailscale、EasyTier
+        等组网软件，让设备之间互通，再填写地址与连接端口。不要把未加密的经典 TCP
+        ADB 暴露到公网。
+      </p>
+      <h2>声音或麦克风没有生效？</h2>
+      <p>
+        播放远端声音和转发本机麦克风是独立开关。麦克风转发默认关闭，开启时需授权录音。远端
+        Android 版本、厂商与具体 App
+        的音频策略可能限制采集；受保护内容也可能不允许画面或声音转发。
+      </p>
+      <h2>文档与反馈</h2>
+      <p>
+        <a
+          href="https://github.com/moteng-network/scrcpy-ios/blob/main/docs/usage.md"
+          >iOS 使用说明</a
+        >
+        ·
+        <a href="https://github.com/felix021/scrcpy-apk">Android 文档与下载</a>
+      </p>
+      <p>
+        通过
+        <a href="https://github.com/moteng-network/scrcpy-ios/issues"
+          >iOS Issues</a
+        >
+        或
+        <a href="https://github.com/felix021/scrcpy-apk/issues"
+          >Android Issues</a
+        >
+        提交问题。请附客户端版本、iOS / Android
+        系统版本、连接方式、复现步骤与去除敏感信息的错误提示。不要上传私钥、配对码、设备标识或个人网络配置。
+      </p>
+      <hr />
+      <div id="english" lang="en">
+        <h2>Before connecting</h2>
+        <p>
+          Use an Android device you are authorized to control. Android 11+
+          wireless debugging is recommended: enable Developer options and
+          Wireless debugging, then pair by QR or code. The client displays the
+          QR code; Android scans it. Pairing and connection ports are different.
+          Both devices must be reachable; QR discovery requires the same local
+          network.
+        </p>
+        <h2>Paired, but cannot connect?</h2>
+        <p>
+          Use the connection port on Android’s main Wireless debugging page, not
+          the temporary pairing port. Check Wi-Fi, wireless debugging and iOS
+          Local Network permission. The port may change after switching networks
+          or restarting wireless debugging.
+        </p>
+        <h2>USB and remote networks</h2>
+        <p>
+          The Android client supports USB ADB with a compatible USB Host device
+          and cable. The iOS client does not currently support direct USB. For
+          connections across networks, use your own VPN or software such as
+          Tailscale or EasyTier to make the devices reachable, then enter the
+          address and port. Never expose unencrypted classic TCP ADB directly to
+          the internet.
+        </p>
+        <h2>Audio and microphone</h2>
+        <p>
+          Remote audio playback and local microphone forwarding have separate
+          switches. Microphone forwarding is off by default and requires
+          permission. Android versions, manufacturers and individual app
+          policies can limit capture. Protected content may block video or audio
+          forwarding.
+        </p>
+        <h2>Documentation and feedback</h2>
+        <p>
+          <a
+            href="https://github.com/moteng-network/scrcpy-ios/blob/main/README.en.md"
+            >iOS documentation</a
+          >
+          ·
+          <a
+            href="https://github.com/felix021/scrcpy-apk/blob/main/README.en.md"
+            >Android documentation</a
+          >
+        </p>
+        <p>
+          Report problems in
+          <a href="https://github.com/moteng-network/scrcpy-ios/issues"
+            >iOS Issues</a
+          >
+          or
+          <a href="https://github.com/felix021/scrcpy-apk/issues"
+            >Android Issues</a
+          >. Include the app and system versions, connection method,
+          reproduction steps and sanitized errors. Do not share private keys,
+          pairing codes, device identifiers or personal network configuration.
+        </p>
+      </div>
+    </main>
+    <footer class="wrap footer">
+      <span
+        >Remote · scrcpy /
+        <a href="https://github.com/moteng-network">Moteng Network</a></span
+      >
+      <div class="footer-links">
+        <a href="privacy.html">隐私政策</a><a href="support.html">使用与支持</a
+        ><a href="https://github.com/moteng-network/scrcpy-ios"
+          >源码 · GPL-3.0</a
+        >
+      </div>
+    </footer>
+  </body>
+</html>
