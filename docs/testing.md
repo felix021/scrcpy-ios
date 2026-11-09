@@ -106,3 +106,5 @@ python3 scripts/with-build-lock.py xcodebuild -project Scrcpy.xcodeproj -scheme 
 后续 build 5 修正加密材料标记，并重新完成设备 Archive、正确团队签名和 Mac 严格签名 / 权限核验。应用运行时代码未变，使用原先的功能回归与截图证据；不能把签名脚本测试计入 Swift 核心测试数。
 
 build 5 的 Apple 上传工具返回 `UPLOAD SUCCEEDED`，无错误。素材经 App Store Connect 再次查询确认：en-US / zh-Hans，各有 4 张 iPhone 与 4 张 iPad 截图，16 张均为 `COMPLETE`；美国基础定价查询为 USD 0.99，销售范围查询确认法国与中国大陆未启用。上传成功与服务端构建处理、审核通过是不同状态，需分别记录。
+
+Apple 服务端最终将 build 5 标为 `VALID`；已核对其 iOS / 1.0.0 / build 5 和加密标记，关联正式 iOS 版本后再次读取构建关系确认成功，并保存 en-US / zh-Hans 测试说明。尚未邀请测试人员或正式提交审核。

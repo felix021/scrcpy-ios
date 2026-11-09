@@ -9,7 +9,7 @@
 - `Resources/PrivacyInfo.xcprivacy` 声明不跟踪、不收集数据；UserDefaults 只存本 App 的语言和本机名称，使用 `CA92.1` 原因。没有使用 App Group 或读取其他 App 偏好。客户端本地配置和会话处理见 [隐私政策](https://scrcpy.oh-my-term.cn/privacy.html)。
 - 随包有 BoringSSL，真实使用标准 TLS / ADB 配对加密，不能填成只使用 Apple 系统加密。当前发行不含法国，按 Apple 对标准算法、无需上传材料的说明，`ITSAppUsesNonExemptEncryption` 为 `false`；该字段不表示没有加密。增加法国或改变算法前必须重新核对声明。
 - [中英文商店草稿](../appstore/README.md)、网站、支持和隐私 URL 已准备。审核备注明确 Android 硬件依赖、开发者选项与授权、二维码方向，以及 Android JAR 仅在 Android 执行。
-- build 5 已通过 Apple 上传校验，正在或已完成服务端处理；处理完成并关联后才能作为审核构建。中英文商店 / TestFlight 文案、16 张截图、US$0.99、Utilities / Productivity 和 4+ 已写入；初始销售范围 173 个地区，暂不含中国大陆与法国，关闭自动增加地区。正式版本使用手动发布。
+- build 5 已通过 Apple 上传校验，服务端状态 `VALID`，已关联 iOS 1.0.0 正式版本，并保存中英文测试说明。中英文商店 / TestFlight 文案、16 张截图、US$0.99、Utilities / Productivity 和 4+ 已写入；初始销售范围 173 个地区，暂不含中国大陆与法国，关闭自动增加地区。正式版本使用手动发布。
 - 使用 Xcode 26.6；最低 iOS 16。13 项核心测试通过，真实 Android 错误配对码拒绝、正确配对码和 TLS 视频探针通过；iPhone / iPad 的配对 UI 回归以及中英文截图采集均通过，16 张截图与最终包证据留在私有构建目录。
 
 ## 账号与 App 条目
