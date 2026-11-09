@@ -17,6 +17,13 @@ def run(*command):
     return subprocess.run(command, check=True, capture_output=True).stdout
 
 
+def validate_export_compliance(info, distribution):
+    if distribution == 'app-store' and info.get('ITSAppUsesNonExemptEncryption') is True:
+        code = info.get('ITSEncryptionExportComplianceCode')
+        if not isinstance(code, str) or not code.strip():
+            raise ValueError('Non-exempt encryption requires an Apple-issued ITSEncryptionExportComplianceCode before App Store upload')
+
+
 def sign(args):
     profile_bytes = args.profile.read_bytes()
     profile = plistlib.loads(run('openssl', 'cms', '-verify', '-inform', 'DER', '-in', str(args.profile), '-noverify'))
@@ -58,6 +65,7 @@ def sign(args):
             raise ValueError('Expected exactly one app in Payload')
         app = apps[0]
         info = plistlib.loads((app / 'Info.plist').read_bytes())
+        validate_export_compliance(info, args.distribution)
         bundle = info['CFBundleIdentifier']
         prefix = profile['ApplicationIdentifierPrefix'][0]
         identifier = prefix + '.' + bundle

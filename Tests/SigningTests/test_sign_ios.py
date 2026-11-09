@@ -44,5 +44,25 @@ class TeamBoundaryTests(unittest.TestCase):
         self.assert_rejected({})
 
 
+class ExportComplianceTests(unittest.TestCase):
+    def test_non_exempt_store_build_requires_apple_code(self):
+        for code in [None, '', '  ', []]:
+            with self.subTest(code=code):
+                with self.assertRaisesRegex(ValueError, 'Apple-issued'):
+                    sign_ios.validate_export_compliance({
+                        'ITSAppUsesNonExemptEncryption': True,
+                        'ITSEncryptionExportComplianceCode': code,
+                    }, 'app-store')
+
+    def test_apple_code_is_required_only_for_declared_non_exempt_store_builds(self):
+        sign_ios.validate_export_compliance({'ITSAppUsesNonExemptEncryption': False}, 'app-store')
+        sign_ios.validate_export_compliance({}, 'app-store')
+        sign_ios.validate_export_compliance({'ITSAppUsesNonExemptEncryption': True}, 'ad-hoc')
+        sign_ios.validate_export_compliance({
+            'ITSAppUsesNonExemptEncryption': True,
+            'ITSEncryptionExportComplianceCode': 'test-apple-issued-code',
+        }, 'app-store')
+
+
 if __name__ == '__main__':
     unittest.main()

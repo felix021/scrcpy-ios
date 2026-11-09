@@ -69,7 +69,7 @@ xcrun swift run scrcpy-probe \
 
 跨机器时 AVD 的 mDNS 不会直接穿过 SSH 隧道，因此测试用临时 Bonjour 代理发布其转发端口。代理与隧道随测试进程清理，生产 App 仍直接发现并连接 Android。该验证覆盖二维码内容与完整协议链路，未使用实体 Android 摄像头扫码。
 
-## 1.0.0 (4) 上架准备
+## 1.0.0 上架准备
 
 加密桥接改为基于固定 Apache-2.0 AOSP 版本的 C++17 实现后，13 项核心测试通过，其中两项专门检查无效 DER、非阻塞 TLS ClientHello、未认证时拒绝加密与无效 SPAKE2 消息。真实 Android 16 AVD 的错误配对码被拒绝，正确配对码完成 TLS 视频探针；iPad 13 英寸的实际 QR 解码 / 系统配对 / 视频 UI 链路与 iPhone 大屏的配对码 UI 链路分别通过。
 
@@ -81,7 +81,7 @@ xcrun swift run scrcpy-probe \
 python3 -m unittest discover -s Tests/SigningTests -v
 ```
 
-三项测试覆盖其他团队、团队权限不一致和缺少团队的 profile，均在读取 signer 或解包 IPA 前拒绝。签名命令必须显式传入私有配置中确认的 `--team-id`。本轮还使用正确账号重新签名，并在 Mac 核对嵌入 profile、App 权限和严格递归签名；错误团队的签名包已隔离，不作为上架候选。
+三项测试覆盖其他团队、团队权限不一致和缺少团队的 profile，均在读取 signer 或解包 IPA 前拒绝。另两项测试覆盖非豁免加密缺少 / 空 / 非字符串编号时拒绝，以及编号非空检查、材料豁免和 Ad Hoc 模式的边界；测试不会代替 Apple 核验编号真实性。签名命令必须显式传入私有配置中确认的 `--team-id`。本轮还使用正确账号重新签名，并在 Mac 核对嵌入 profile、App 权限和严格递归签名；错误团队的签名包已隔离，不作为上架候选。
 
 ### 可重复的商店截图
 
@@ -102,3 +102,7 @@ python3 scripts/with-build-lock.py xcodebuild -project Scrcpy.xcodeproj -scheme 
 采集连接页、实际远控、完整键盘和运行时设置；用 xcresulttool 导出附件。选用 Apple 接受的 iPhone 大屏与 iPad 13 英寸尺寸，确认 PNG 无 alpha，检查每张图的隐私和实际界面后上传。所有原始截图、录屏和附件清单放私有构建目录，不提交二进制素材。本轮没有重做物理 iPhone / iPad 的完整录音、扬声器和 USB 验收。
 
 本次中英文采集分别在 iPhone 大屏（1320×2868）和 iPad 13 英寸（2064×2752）通过，共 16 张不透明 RGB PNG。素材来自实际 App 和授权 Android AVD，未使用界面示意图替代；是否采用以及最终顺序以商店提交资料为准。
+
+后续 build 5 修正加密材料标记，并重新完成设备 Archive、正确团队签名和 Mac 严格签名 / 权限核验。应用运行时代码未变，使用原先的功能回归与截图证据；不能把签名脚本测试计入 Swift 核心测试数。
+
+build 5 的 Apple 上传工具返回 `UPLOAD SUCCEEDED`，无错误。素材经 App Store Connect 再次查询确认：en-US / zh-Hans，各有 4 张 iPhone 与 4 张 iPad 截图，16 张均为 `COMPLETE`；美国基础定价查询为 USD 0.99，销售范围查询确认法国与中国大陆未启用。上传成功与服务端构建处理、审核通过是不同状态，需分别记录。

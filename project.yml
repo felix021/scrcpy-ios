@@ -7,7 +7,7 @@ settings:
     SWIFT_VERSION: '5.9'
     SWIFT_STRICT_CONCURRENCY: minimal
     MARKETING_VERSION: 1.0.0
-    CURRENT_PROJECT_VERSION: '4'
+    CURRENT_PROJECT_VERSION: '5'
     CODE_SIGN_STYLE: Automatic
     DEVELOPMENT_TEAM: ''
 targets:
@@ -56,7 +56,8 @@ targets:
         UILaunchScreen: {}
         NSLocalNetworkUsageDescription: Discover, pair with and control an Android device over ADB on your local network.
         NSMicrophoneUsageDescription: Send microphone audio to the connected Android device only when you enable microphone forwarding.
-        ITSAppUsesNonExemptEncryption: true
+        # Standard public algorithms; current launch excludes France. See docs/app-store.md.
+        ITSAppUsesNonExemptEncryption: false
         UISupportedInterfaceOrientations:
         - UIInterfaceOrientationPortrait
         - UIInterfaceOrientationPortraitUpsideDown
