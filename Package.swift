@@ -10,4 +10,4 @@ let package = Package(name: "ScrcpyIOS", platforms: [.macOS(.v13), .iOS(.v16)], 
     .target(name: "ScrcpyCore", dependencies:["AdbCrypto"], path: "Sources/Core"),
     .executableTarget(name: "ScrcpyProbe", dependencies: ["ScrcpyCore"], path: "Sources/Probe"),
     .testTarget(name: "CoreTests", dependencies: ["ScrcpyCore"], path: "Tests/CoreTests")
-])
+], cxxLanguageStandard: .cxx17)

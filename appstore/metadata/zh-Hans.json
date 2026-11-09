@@ -1,0 +1,10 @@
+{
+  "name": "远控 · scrcpy",
+  "subtitle": "用 iPhone 和 iPad 操控 Android",
+  "privacyPolicyUrl": "https://scrcpy.oh-my-term.cn/privacy.html",
+  "promotionalText": "把另一部 Android 握在手里。支持无线配对、触控与完整键盘，远端声音和本机麦克风分别开关。",
+  "description": "用 iPhone 或 iPad 查看并控制 Android 手机。通过 ADB 直接连接，采用原生界面。\n\n配对与连接\n• Android 11+ 无线调试：支持二维码和六位配对码，配对后通过 TLS 连接。\n• 自定义本机名称，方便在 Android 的已配对设备列表中识别。\n• 保存多台设备的连接配置，包括地址、端口和画质设置。\n• 同时支持经典 TCP ADB。\n\n手机和平板上的操作\n• 触控、多点触控，以及返回、Home、最近任务虚拟按键。\n• 从画面边缘滑入，操作 Android 返回、桌面与快捷设置。\n• 六行 QWERTY 键盘，包含 Ctrl、Alt、Shift、Win、Fn；上滑输入符号，下滑输入大写。\n• 适配横竖屏，可选方向同步，也可以手动旋转远端画面。\n• 支持 H.264 / H.265，以及分辨率、码率和帧率设置。\n\n声音分别掌控\n• 在本机播放 Android 的系统声音。\n• 按需将本机麦克风转发到 Android。\n• 播放和麦克风使用两个独立开关；麦克风转发默认关闭。\n\n购买前请确认\n被控端必须是你有权操作的 Android，并允许 ADB 调试。无线配对需要 Android 11 或更新版本，在开发者选项中开启无线调试。两台设备需要网络互通，二维码发现需要同一局域网。经典 TCP ADB 初次设置可能需要电脑。iOS 暂不支持 USB 直连。\n\n声音采集、麦克风转发和受保护内容的可用性，取决于 Android 版本、设备策略与被控 App。远控会话在本 App 保持前台时运行。\n\n无需账号或订阅。没有广告和中转服务器，设备之间直接连接。项目按 GPL-3.0 开源。\n\n连接说明与支持：https://scrcpy.oh-my-term.cn/support.html",
+  "keywords": "安卓,远程控制,投屏,ADB,手机,平板,无线调试,键盘,声音,麦克风",
+  "supportUrl": "https://scrcpy.oh-my-term.cn/support.html",
+  "marketingUrl": "https://scrcpy.oh-my-term.cn/"
+}

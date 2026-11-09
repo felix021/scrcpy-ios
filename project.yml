@@ -6,8 +6,8 @@ settings:
   base:
     SWIFT_VERSION: '5.9'
     SWIFT_STRICT_CONCURRENCY: minimal
-    MARKETING_VERSION: 0.2.1
-    CURRENT_PROJECT_VERSION: '3'
+    MARKETING_VERSION: 1.0.0
+    CURRENT_PROJECT_VERSION: '4'
     CODE_SIGN_STYLE: Automatic
     DEVELOPMENT_TEAM: ''
 targets:
@@ -54,11 +54,9 @@ targets:
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         UILaunchScreen: {}
-        NSLocalNetworkUsageDescription: Connect to an Android device over ADB on your
-          local network.
-        NSMicrophoneUsageDescription: Forward your microphone to the connected Android
-          device when you enable it.
-        ITSAppUsesNonExemptEncryption: false
+        NSLocalNetworkUsageDescription: Discover, pair with and control an Android device over ADB on your local network.
+        NSMicrophoneUsageDescription: Send microphone audio to the connected Android device only when you enable microphone forwarding.
+        ITSAppUsesNonExemptEncryption: true
         UISupportedInterfaceOrientations:
         - UIInterfaceOrientationPortrait
         - UIInterfaceOrientationPortraitUpsideDown
@@ -94,6 +92,7 @@ targets:
         - $(SRCROOT)/Sources/AdbCrypto/include
         - $(SRCROOT)/build/boringssl/include
         GCC_C_LANGUAGE_STANDARD: gnu11
+        CLANG_CXX_LANGUAGE_STANDARD: c++17
         SKIP_INSTALL: true
 schemes:
   Scrcpy:

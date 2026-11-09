@@ -68,3 +68,29 @@ xcrun swift run scrcpy-probe \
 2026-11-08 本轮结果：11 项单元测试通过；错误配对码会被 Android 拒绝，不会误判为成功；iPhone 与 iPad 布局测试通过；Android 16 AVD 的真实六位配对码、TLS 连接和视频流探针通过。二维码测试解码 iOS 实际显示的 QR 图像，把内容交给 Android 系统 QR 配对入口，通过 Bonjour 测试转发发现服务，完成配对与原生画面解码。配对码界面另验证 H.265 和远端音频开关保持开启。AVD 的软件 HEVC 编码器会报告限制并降低分辨率，该提示保留在界面中，iOS 对恢复后的实际视频正常解码。Android 配对列表已核对完整名称 `My_iPad_Client`。最后完整 UI 回归为 3 项通过、1 项无线配对测试因未提供配对环境明确跳过；配对码和二维码另分别运行通过。
 
 跨机器时 AVD 的 mDNS 不会直接穿过 SSH 隧道，因此测试用临时 Bonjour 代理发布其转发端口。代理与隧道随测试进程清理，生产 App 仍直接发现并连接 Android。该验证覆盖二维码内容与完整协议链路，未使用实体 Android 摄像头扫码。
+
+## 1.0.0 (4) 上架准备
+
+加密桥接改为基于固定 Apache-2.0 AOSP 版本的 C++17 实现后，13 项核心测试通过，其中两项专门检查无效 DER、非阻塞 TLS ClientHello、未认证时拒绝加密与无效 SPAKE2 消息。真实 Android 16 AVD 的错误配对码被拒绝，正确配对码完成 TLS 视频探针；iPad 13 英寸的实际 QR 解码 / 系统配对 / 视频 UI 链路与 iPhone 大屏的配对码 UI 链路分别通过。
+
+设备 Archive、App Store 签名、Mac `codesign --verify --deep --strict` 和隐私清单语法通过；最终包检查了 Bundle ID、1.0.0 / build 4、加密标记、两种语言目的字符串，以及根目录与随包第三方声明一致性。本地验证不能替代 Apple 上传后的服务端处理。
+
+### 可重复的商店截图
+
+`StoreScreenshots/testCaptureProductScreens` 是显式选择的素材采集，不在普通验证中自动连接设备。只在自有模拟器和已授权 Android 上设置以下测试进程环境：
+
+```sh
+TEST_RUNNER_STORE_CAPTURE_HOST=<owned-target-host> \
+TEST_RUNNER_STORE_CAPTURE_PORT=<forwarded-adb-port> \
+TEST_RUNNER_STORE_CAPTURE_LANGUAGE=en \
+python3 scripts/with-build-lock.py xcodebuild -project Scrcpy.xcodeproj -scheme Scrcpy \
+  -destination 'platform=iOS Simulator,id=<owned-simulator-uuid>' \
+  -only-testing:ScrcpyUITests/StoreScreenshots/testCaptureProductScreens \
+  -parallel-testing-enabled NO CODE_SIGN_IDENTITY=- test
+```
+
+先完成该模拟器的正常配对授权，使用构建锁，并在外层维护独立隧道；没有主机变量时明确跳过。`STORE_CAPTURE_LANGUAGE=zh` 采集中文版。采集配置页面时使用示例地址 `android.local`，真正连接时才使用私有环境地址；发布的远控截图不包含主机地址。
+
+采集连接页、实际远控、完整键盘和运行时设置；用 xcresulttool 导出附件。选用 Apple 接受的 iPhone 大屏与 iPad 13 英寸尺寸，确认 PNG 无 alpha，检查每张图的隐私和实际界面后上传。所有原始截图、录屏和附件清单放私有构建目录，不提交二进制素材。本轮没有重做物理 iPhone / iPad 的完整录音、扬声器和 USB 验收。
+
+本次中英文采集分别在 iPhone 大屏（1320×2868）和 iPad 13 英寸（2064×2752）通过，共 16 张不透明 RGB PNG。素材来自实际 App 和授权 Android AVD，未使用界面示意图替代；是否采用以及最终顺序以商店提交资料为准。

@@ -8,14 +8,22 @@ https://github.com/google/boringssl. Its Apache-2.0 license is included in
 `Resources/BoringSSL-LICENSE.txt`. The source archive SHA-256 is checked by
 `scripts/prepare-crypto.py`; generated sources and libraries stay under `build/`.
 
-## ADBClient-iOS
+## Android Open Source Project (AOSP)
 
-The certificate generation and SPAKE2 / HKDF / AES-GCM primitives in
-`Sources/AdbCrypto/AdbCrypto.c` are adapted from `AdbNative.c` in
-https://github.com/lionlggnd/ADBClient-iOS at commit
-`31057ba6defd0d1a7454503e662f49b05ef21c2a` (GPL-3.0, see `LICENSE`).
-The implementation here uses memory BIOs and the existing Swift Network transport
-instead of that project's sockets and blocking SSL read/write implementation.
+The ADB TLS certificate, exporter, SPAKE2 identity and AES-GCM record operations
+in `Sources/AdbCrypto/AdbCrypto.cpp` are ported from Apache-2.0 AOSP adb at
+`android-14.0.0_r1`:
+
+- `crypto/x509_generator.cpp` and `tls/tls_connection.cpp` (Copyright 2019 AOSP)
+- `pairing_auth/pairing_auth.cpp` and `pairing_auth/aes_128_gcm.cpp` (Copyright 2020 AOSP)
+
+Source: https://android.googlesource.com/platform/packages/modules/adb/+/refs/tags/android-14.0.0_r1/
+
+This port replaces AOSP's Android-specific sockets/logging with a nonblocking
+memory-BIO C interface for Swift. It retains protocol constants, little-endian
+nonces and the original copyright notices. The Apache-2.0 license is bundled in
+`Resources/AOSP-LICENSE.txt`. The earlier ADBClient-iOS-derived C bridge has been
+removed from the build; its provenance remains in Git history.
 
 ## Android components
 

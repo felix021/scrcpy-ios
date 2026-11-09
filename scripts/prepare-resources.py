@@ -7,8 +7,13 @@ import urllib.request
 import zipfile
 
 ROOT = Path(__file__).resolve().parent.parent
+if (ROOT / 'Resources/ThirdPartyNotices.txt').read_bytes() != (ROOT / 'THIRD_PARTY_NOTICES.md').read_bytes():
+    raise SystemExit('Bundled third-party notices are stale; sync Resources/ThirdPartyNotices.txt from THIRD_PARTY_NOTICES.md before building.')
 RESOURCES = ROOT / 'Resources'
 RESOURCES.mkdir(exist_ok=True)
+for localized in RESOURCES.glob('*.lproj/InfoPlist.strings'):
+    if (ROOT / 'Sources/App' / localized.parent.name / localized.name).exists():
+        raise SystemExit('Duplicate localized InfoPlist.strings in Resources and Sources/App: ' + localized.parent.name)
 
 def fetch(url, expected, destination=None):
     if destination and destination.is_file():

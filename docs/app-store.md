@@ -1,40 +1,64 @@
 # App Store 上架准备
 
-当前计划为一次购买 **US$0.99**，iPhone / iPad 通用，暂无订阅或 App 内购买。源码继续使用 GPL-3.0。以下是准备清单，不代表已提交审核或已经上架。
+计划首次版本 **1.0.0 (4)**，iPhone / iPad 通用，一次购买 **US$0.99**，无订阅或 App 内购买。源码继续使用 GPL-3.0；当前仍在准备阶段，没有提交审核或正式上架。
 
-## 已有基础
+## 当前完成项
 
-- 原生 SwiftUI 客户端，最低 iOS 16；构建环境使用 Xcode 26.6，符合 Apple 自 2026-04-28 起要求 iOS 上传包使用 iOS 26 SDK 或更高版本的要求。
-- 新 Bundle ID：`cn.oh-my-term.scrcpy`。旧开发包的描述文件不能复用；需要独立 App ID 和 App Store 分发描述文件。
-- 中英文项目主页、隐私政策与支持页见 [网站发布](publishing.md)。应用设置中可打开隐私政策和源码。
-- 没有账号、广告或分析服务；本机麦克风转发默认关闭。隐私标签仍需按最终包的实际行为在 App Store Connect 中填写。
+- Bundle ID 为 `cn.oh-my-term.scrcpy`；已注册独立 App ID，使用现有 Distribution 证书创建 App Store profile。描述文件与账号信息仅保存在私有配置。
+- TLS / SPAKE2 / AES-GCM 包装改为直接基于 Apache-2.0 AOSP adb 的 C++ 实现，移除 ADBClient-iOS 改编的 C 文件；完整来源和改编范围见 [第三方声明](../THIRD_PARTY_NOTICES.md)。项目整体仍为 GPL-3.0。Android v1.0.0 的麦克风 DEX 保持固定版本和旧入口，不随主应用包名改变。
+- `Resources/PrivacyInfo.xcprivacy` 声明不跟踪、不收集数据；UserDefaults 只存本 App 的语言和本机名称，使用 `CA92.1` 原因。没有使用 App Group 或读取其他 App 偏好。客户端本地配置和会话处理见 [隐私政策](https://scrcpy.oh-my-term.cn/privacy.html)。
+- `ITSAppUsesNonExemptEncryption` 改为 `true`，因为随包有 BoringSSL，不能当作只使用 Apple 系统加密。上传后仍需按真实实现完成加密问卷；当前默认销售草稿不含法国，中国大陆也待另行确认。
+- [中英文商店草稿](../appstore/README.md)、网站、支持和隐私 URL 已准备。审核备注明确 Android 硬件依赖、开发者选项与授权、二维码方向，以及 Android JAR 仅在 Android 执行。
+- 使用 Xcode 26.6；最低 iOS 16。13 项核心测试通过，真实 Android 错误配对码拒绝、正确配对码和 TLS 视频探针通过；iPhone / iPad 的配对 UI 回归以及中英文截图采集均通过，16 张截图与最终包证据留在私有构建目录。
 
-## 提交前必须解决
+## 还需要 App Store Connect 中的 App 条目
 
-1. **第三方 GPL 代码与商店分发条件。** `Sources/AdbCrypto/AdbCrypto.c` 的部分证书 / 配对包装来自 GPL-3.0 的 ADBClient-iOS，固定版本见 [第三方声明](../THIRD_PARTY_NOTICES.md)。项目作者可以为自己拥有版权的代码给出额外分发许可，但不能代替第三方授权。应先取得上游许可，或基于 AOSP / BoringSSL 的原始接口独立实现这层包装，再确认 App Store 分发条件。仅将自己的项目标为 GPL-3.0 不能消除第三方代码的许可问题。
-2. **隐私清单。** 补全 `PrivacyInfo.xcprivacy`，检查 UserDefaults 等需要声明使用理由的 API，并按最终包验证隐私报告；网页政策不能替代此清单。
-3. **加密出口申报。** App 使用自己打包的 BoringSSL 实现 TLS / 配对，不限于系统提供的加密。当前 `ITSAppUsesNonExemptEncryption=false` 需根据 Apple 问卷和实际销售地区重新核实，不能直接沿用早期开发配置。是否在法国等地区销售可能影响所需材料。
-4. **签名和真机检查。** 新 App ID、分发签名和描述文件匹配；验证 iPhone / iPad 真机的麦克风、扬声器、旋转与无线配对。现有模拟器通过不等于覆盖所有真机。
+公开 API 已实际返回 `apps` 不支持 `CREATE`。注册 Bundle ID 不会自动生成 App 条目；账号所有者或有权限的网页角色需要在 <https://appstoreconnect.apple.com/apps> 点击「＋ → 新建 App」：
 
-## 商店与审核资料
+| 字段 | 当前准备值 |
+| --- | --- |
+| 平台 | iOS |
+| 名称 | Remote · scrcpy |
+| 主语言 | English (U.S.) |
+| Bundle ID | cn.oh-my-term.scrcpy |
+| SKU | MOTENG-SCRCPY-IOS |
 
-在 App Store Connect 创建 App 记录，设置名称、SKU、主语言、销售地区与基础价格。以美元设置 0.99 后，其他地区由商店价格体系换算，并非每个地区都收取同一个数值。付费协议、税务及收款资料需由账号所有者确认。
+创建后用页面 URL 中的数字 App ID，继续上传构建、应用中英文元数据、设置 US$0.99 和销售范围，并配置 TestFlight。名称和地区仍可按产品决定调整；不要把旧 Bundle ID 的 App 或签名配置套到新包。
 
-准备中英文描述、关键词、支持及隐私 URL、iPhone / iPad 实际截图、年龄分级、内容权利、隐私标签与审核联系方式。不要将个人测试设备信息放进公开文档。
+## 正式签名与上传
 
-审核备注应明确：本 App 控制用户授权的 Android 实体设备；需要开启开发者选项、无线调试和 ADB 授权；二维码由 iOS 展示、Android 扫描。提供可复现步骤和演示视频，必要时按审核团队要求提供硬件访问方式。被控端 JAR 仅在 Android 上执行，iOS 本机不执行下载的 Android 代码。审核规则对通用屏幕镜像的处理需结合实际功能判断，不能承诺必然获批。
+使用自己的 Distribution 证书和新 ID 对应的 `IOS_APP_STORE` 描述文件：
 
-先通过 TestFlight 验证商店签名包，再提交正式审核。不要把 Ad Hoc IPA 当作 App Store 包，也不要把含设备标识的 Ad Hoc 包放到公开 Release。
+```sh
+scripts/build-ios.sh device
+python3 scripts/sign-ios.py \
+  --distribution app-store \
+  --input build/Scrcpy-unsigned.ipa \
+  --profile /private/path/scrcpy-appstore.mobileprovision \
+  --signer /private/path/distribution-signer.pem \
+  --output build/Scrcpy-AppStore.ipa
+```
 
-## 自动化范围
+App Store profile 不包含个人设备列表，不能当作 Ad Hoc 包安装。脚本校验包名、证书、有效期与分发类型，并保留 TestFlight 的 `beta-reports-active` 权限。签名后在 Mac 用 `codesign --verify --deep --strict` 检查，再通过 Apple 上传工具验证；本地签名验证不等于 App Store 服务端已经接受。Ad Hoc 默认模式保留，详见 [构建与签名](building.md)。
 
-App Store Connect API 可用于 Bundle ID、证书 / 描述文件、构建查询、截图与元数据、价格计划及审核提交。部分步骤仍需要账号所有者操作或网页界面，例如首次创建 App 记录、协议与财务确认。实际 API 权限以账号和密钥角色为准。研究参考中的示例价格或账号参数不能直接照用；密钥、JWT 与签名仅存私有配置，不进入源码。
+## 加密、销售与隐私
+
+当前加密仅实现公开的 ADB 连接和配对：TLS 1.3、RSA、SPAKE2、HKDF-SHA256、AES-128-GCM，不提供用户可定制的密码算法。Apple 对随 App 打包的标准算法与仅调用系统加密有不同的材料要求；在法国销售时另需核对法国加密申报。最终问卷和销售地区以账号所有者确认及 Apple 接受结果为准，不能省略或把开源误报成没有加密。
+
+隐私标签草稿为「不收集数据」：无账号、广告、分析 SDK 或开发者中转，画面、声音、输入及自愿开启的麦克风只在用户设备间实时传输。按实际功能完成并发布 App 隐私问卷与年龄分级。付费协议、税务、收款、欧盟商家身份等账号声明由账号所有者核对，不自动代签。
+
+## 审核与发布
+
+使用实际 App 截图和演示。iPhone / iPad 截图尺寸以当前 Apple 规范为准，必须是不透明 PNG / JPEG；截图与录屏不携带个人主机、密钥或设备信息。审核联系人和演示访问资料放私有配置，不在公开仓库保存个人电话或登录信息。
+
+审核说明要让评审能重复操作：需要有权控制的 Android，开启开发者选项与无线调试；iOS 展示 QR，由 Android 扫描，也可使用配对码。没有 App 账号或订阅。屏幕为通用整机镜像，不提供远端 App 商店或云端应用目录；是否接受仍由 Apple 审核判断。
+
+先完成 TestFlight 与真机检查，再关联正式构建和提交审核。模拟器结果不等于覆盖所有 Android 厂商、iPhone / iPad 麦克风与扬声器。商店规则、版本、价格、截图和许可都应对应最终上传的源码及二进制。
 
 ## 官方资料
 
-- [审核规则](https://developer.apple.com/app-store/review/guidelines/)：特别关注 2.1、2.5.2、4.2.7 和 5.1.1。
-- [2026 年 SDK 要求](https://developer.apple.com/news/upcoming-requirements/?id=04282026a)。
-- [隐私清单](https://developer.apple.com/documentation/bundleresources/privacy_manifest_files)。
+- [审核规则](https://developer.apple.com/app-store/review/guidelines/)：2.1、2.5.2、4.2.7、5.1.1。
+- [隐私 API 原因](https://developer.apple.com/documentation/bundleresources/app-privacy-configuration/nsprivacyaccessedapitypes/nsprivacyaccessedapitype)。
 - [加密出口材料](https://developer.apple.com/help/app-store-connect/reference/app-information/export-compliance-documentation-for-encryption/)。
+- [截图规格](https://developer.apple.com/help/app-store-connect/reference/app-information/screenshot-specifications)。
 - [价格计划 API](https://developer.apple.com/documentation/appstoreconnectapi/post-v1-apppriceschedules) 与 [审核提交 API](https://developer.apple.com/documentation/appstoreconnectapi/post-v1-reviewsubmissions)。
-- [上游固定版本的 GPL-3.0 许可证](https://github.com/lionlggnd/ADBClient-iOS/blob/31057ba6defd0d1a7454503e662f49b05ef21c2a/LICENSE)。

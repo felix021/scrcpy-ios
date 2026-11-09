@@ -65,3 +65,9 @@ python3 scripts/sign-ios.py \
 可把源码同步到专用构建目录，再通过 SSH 执行上述脚本。排除 `.git`、`.build`、`build`、生成工程；不要覆盖其他项目目录。SSH 别名、路径和模拟器 UUID 由个人配置提供。
 
 跨机器 UI 测试的 ADB 隧道由 `scripts/test-remote.py` 管理。它关闭 SSH 连接复用，确保隧道与测试使用相同生命周期；所有路径和主机名通过参数传入，详见 [验证](testing.md)。
+
+## App Store 分发
+
+`sign-ios.py --distribution app-store` 使用匹配的新 ID 的 `IOS_APP_STORE` 描述文件，不能传入 `--device`；默认仍为 Ad Hoc 签名。两种模式会互相检查描述文件类型，避免把开发 / 企业 / Ad Hoc 包误当作商店包。`beta-reports-active` 仅按 App Store profile 的权限保留。上传、隐私与审核准备见 [App Store 清单](app-store.md)。
+
+第三方声明在源码根目录和 `Resources/ThirdPartyNotices.txt` 中保持一致；构建脚本发现不一致会中止，更新时一起同步。当前加密桥接为 C++17，协议常量来自固定 AOSP 版本，不恢复已移除的旧 C 文件。通过 rsync 复用旧构建目录时也应同步清理已删除的源码，避免两个实现同时被编译。

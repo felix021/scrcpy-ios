@@ -4,4 +4,4 @@ Official scrcpy server source (Apache-2.0): https://github.com/Genymobile/scrcpy
 The Android microphone DEX also contains unused BSD-licensed adblib classes; their license is included alongside this file.
 No FFmpeg, SDL, or code from scrcpy-mobile is linked into this app.
 ADB TLS and SPAKE2 primitives use BoringSSL: https://github.com/google/boringssl/tree/0131ae9d78e42fcc2c1811315e62410ad96d8230
-Adapted certificate/pairing primitives: https://github.com/lionlggnd/ADBClient-iOS/tree/31057ba6defd0d1a7454503e662f49b05ef21c2a
+ADB certificate/pairing protocol port (Apache-2.0): https://android.googlesource.com/platform/packages/modules/adb/+/refs/tags/android-14.0.0_r1/

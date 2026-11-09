@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Sign a device IPA for registered Ad Hoc devices using external credentials."""
+"""Sign an Ad Hoc or App Store IPA using external distribution credentials."""
 import argparse
 from datetime import datetime, timezone
 import hashlib
@@ -24,8 +24,12 @@ def sign(args):
         raise ValueError('Provisioning profile has expired')
     permitted = profile.get('Entitlements', {})
     devices = profile.get('ProvisionedDevices', [])
-    if not devices or permitted.get('get-task-allow') or profile.get('ProvisionsAllDevices'):
+    if permitted.get('get-task-allow') or profile.get('ProvisionsAllDevices'):
+        raise ValueError('A distribution profile is required')
+    if args.distribution == 'ad-hoc' and not devices:
         raise ValueError('An Ad Hoc distribution profile is required')
+    if args.distribution == 'app-store' and devices:
+        raise ValueError('An App Store distribution profile must not contain devices')
     if args.device and args.device not in devices:
         raise ValueError('Target device is absent from the provisioning profile')
     certificate = run('openssl', 'x509', '-in', str(args.signer), '-outform', 'DER')
@@ -62,6 +66,8 @@ def sign(args):
             'get-task-allow': False,
             'keychain-access-groups': [identifier],
         }
+        if args.distribution == 'app-store' and permitted.get('beta-reports-active'):
+            entitlements['beta-reports-active'] = True
         allowed_groups = permitted.get('keychain-access-groups', [])
         if not any(identifier == group or group.endswith('*') and identifier.startswith(group[:-1]) for group in allowed_groups):
             raise ValueError('Profile does not permit the app Keychain group')
@@ -91,11 +97,14 @@ def sign(args):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--input', type=Path, required=True, help='Unsigned device IPA')
-    parser.add_argument('--profile', type=Path, required=True, help='Private Ad Hoc .mobileprovision')
+    parser.add_argument('--profile', type=Path, required=True, help='Private .mobileprovision matching the distribution mode')
     parser.add_argument('--signer', type=Path, required=True, help='Private PEM containing distribution certificate and key')
+    parser.add_argument('--distribution', choices=['ad-hoc', 'app-store'], default='ad-hoc')
     parser.add_argument('--device', help='Require this UDID in the profile; keep it in private local configuration')
     parser.add_argument('--output', type=Path, required=True)
     args = parser.parse_args()
+    if args.distribution == 'app-store' and args.device:
+        parser.error('--device is only supported for Ad Hoc signing')
     if args.input.resolve() == args.output.resolve():
         parser.error('Input and output must differ')
     if not shutil.which('rcodesign'):

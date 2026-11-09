@@ -9,7 +9,7 @@
 | [构建与签名](building.md) | XcodeGen、依赖校验、模拟器、设备包和签名 |
 | [验证](testing.md) | 单元测试、两端模拟器、探针和验收边界 |
 | [项目网站与仓库](publishing.md) | GitHub Pages、中英文主页、隐私政策与组织迁移 |
-| [App Store 准备](app-store.md) | 定价、签名、隐私、许可与审核资料 |
+| [App Store 准备](app-store.md) | 定价、签名、隐私、许可与审核资料；[中英文商店草稿](../appstore/README.md) |
 | [开源与分发](licensing.md) | GPL-3.0、Android 服务许可和对应源码 |
 
 协作规则集中在 [AGENTS.md](../AGENTS.md)。个人部署、签名和设备连接信息不属于通用文档。

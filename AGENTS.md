@@ -4,7 +4,7 @@
 
 ## 目录与职责
 
-- `Sources/AdbCrypto/`：BoringSSL 内存 BIO、SPAKE2 / AES-GCM 包装；来源与许可见 `THIRD_PARTY_NOTICES.md`，生成库和下载源码只放 `build/`。
+- `Sources/AdbCrypto/`：基于 Apache-2.0 AOSP adb 的 C++ 包装：BoringSSL 内存 BIO、SPAKE2 / AES-GCM；来源与许可见 `THIRD_PARTY_NOTICES.md`，生成库和下载源码只放 `build/`。
 - `Sources/Core/`：ADB 身份、连接与流复用、scrcpy 协议、远端服务生命周期、声音解码；同时用于 macOS 协议探针。
 - `Sources/App/`：SwiftUI 配置与远控界面、VideoToolbox 视频、AVAudioEngine 声音、触摸与键盘。
 - `Sources/Probe/`：macOS 命令行端到端探针，只操作明确指定的测试 Android。
@@ -24,4 +24,5 @@
 6. 用户启用前不申请录音或转发麦克风；仅观看禁止输入、麦克风和方向控制。恢复本会话改过的远端设置。
 7. 服务版本、下载 URL、SHA-256 和对应源码一起更新。任何能力的验收结论必须说明实际测试环境，不把模拟器结果等同于真机通过。
 8. 配对密码只驻留当前页面；手工取消须终止网络 I/O。二维码必须使用 Android Studio 的 `WIFI:T:ADB` 方向（iOS 展示、Android 扫码），不能把普通扫码页面当作 ADB 配对。
-9. 按改动运行相关检查，见 [验证](docs/testing.md)；改功能同步更新相关文档，中英文 README 互相链接。
+9. 根目录与随包第三方声明保持一致，原生权限本地化仅保留一份；资源准备脚本会拒绝旧声明或重复 InfoPlist.strings。
+10. 按改动运行相关检查，见 [验证](docs/testing.md)；改功能同步更新相关文档，中英文 README 互相链接。

@@ -2,6 +2,9 @@
 #define SCRCPY_ADB_CRYPTO_H
 #include <stddef.h>
 #include <stdint.h>
+#ifdef __cplusplus
+extern "C" {
+#endif
 typedef struct sc_tls sc_tls;
 typedef struct sc_pair sc_pair;
 // All TLS operations are nonblocking memory-BIO steps. Swift serializes each
@@ -21,4 +24,7 @@ int sc_pair_message(sc_pair *pair, uint8_t *out, size_t capacity);
 int sc_pair_process(sc_pair *pair, const uint8_t *message, size_t length);
 int sc_pair_encrypt(sc_pair *pair, const uint8_t *in, size_t length, uint8_t *out, size_t capacity);
 int sc_pair_decrypt(sc_pair *pair, const uint8_t *in, size_t length, uint8_t *out, size_t capacity);
+#ifdef __cplusplus
+}
+#endif
 #endif
