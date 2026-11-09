@@ -38,7 +38,7 @@ def valid_microphone():
         return False
 
 if not valid_microphone():
-    apk = fetch('https://github.com/felix021/scrcpy-apk/releases/download/v1.0.0/scrcpy-apk-1.0.0.apk',
+    apk = fetch('https://github.com/moteng-network/scrcpy-apk/releases/download/v1.0.0/scrcpy-apk-1.0.0.apk',
                 'f62ce1dce5dc702d6ce70cbe8288024c7face6172208034400003dec9643584f')
     with zipfile.ZipFile(io.BytesIO(apk)) as source:
         dex = source.read('classes.dex')

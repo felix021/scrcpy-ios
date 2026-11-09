@@ -9,7 +9,7 @@ brew install xcodegen cmake
 scripts/build-ios.sh simulator
 ```
 
-脚本还会下载并校验固定版本 BoringSSL 源码，按 macOS、iOS 设备、iOS 模拟器分别生成静态库。产物全部位于 `build/boringssl/`；源码版本和 SHA-256 见 `scripts/prepare-crypto.py`。当前模拟器库面向 Apple Silicon（arm64），Intel Mac 可扩展构建脚本的架构参数。单独运行 Swift Package 测试前先执行 `scripts/build-crypto.sh macosx`。
+脚本还会下载并校验固定版本 BoringSSL 源码，按 macOS、iOS 设备、iOS 模拟器分别生成静态库。产物全部位于 `build/boringssl/`；源码版本和 SHA-256 见 `scripts/prepare-crypto.py`。当前模拟器库和模拟器构建脚本面向 Apple Silicon（arm64），Intel Mac 可扩展构建脚本的架构参数。单独运行 Swift Package 测试前先执行 `scripts/build-crypto.sh macosx`。
 
 构建与远程 UI 测试会持有同一个文件锁，串行执行工程生成和 Xcode 操作，避免同一目录同时生成 `.xcodeproj` 导致拷贝冲突；不同任务需要并行时应使用各自构建目录。
 
@@ -20,8 +20,10 @@ scripts/build-ios.sh simulator
 | 资源 | 版本 / 来源 | SHA-256 |
 | --- | --- | --- |
 | 官方 scrcpy 服务 | Genymobile / scrcpy 5.0.1 | `764eb6f79811d5211fe9df341120882ba9994c7a61b897d7bf3fb662e53bc536` |
-| 麦克风服务来源 APK | felix021 / scrcpy-apk 1.0.0 | `f62ce1dce5dc702d6ce70cbe8288024c7face6172208034400003dec9643584f` |
+| 麦克风服务来源 APK | moteng-network / scrcpy-apk 1.0.0 | `f62ce1dce5dc702d6ce70cbe8288024c7face6172208034400003dec9643584f` |
 | 从 APK 提取的 classes.dex | 同上；生成只含 DEX 的 JAR | `3c128d4d004364b61ecf1fd71e1e2a10f23480f774857aaac449fd10ec89c851` |
+
+麦克风资源仍固定为 Android v1.0.0 的 DEX，入口是 `cn.felix021.scrcpy.MicServer`；Android 主应用的新包名不改变这份历史资源。切换到新版本 DEX 时必须一起修改资源版本、哈希和入口类名。
 
 Android JAR 只上传到被控 Android，由 Android 的 `app_process` 加载，不在 iOS 中执行。资源校验失败会中止；不要跳过哈希校验。
 

@@ -18,7 +18,7 @@ if [ "$mode" = test ]; then
         -derivedDataPath build/simulator -parallel-testing-enabled NO CODE_SIGN_IDENTITY=- test
 elif [ "$mode" = simulator ]; then
     xcodebuild -project Scrcpy.xcodeproj -scheme Scrcpy -configuration Debug \
-        -destination 'generic/platform=iOS Simulator' -derivedDataPath build/simulator CODE_SIGN_IDENTITY=- build
+        -destination 'generic/platform=iOS Simulator' -derivedDataPath build/simulator ARCHS=arm64 CODE_SIGN_IDENTITY=- build
 else
     xcodebuild -project Scrcpy.xcodeproj -scheme Scrcpy -configuration Release \
         -destination 'generic/platform=iOS' -archivePath build/Scrcpy.xcarchive CODE_SIGNING_ALLOWED=NO archive

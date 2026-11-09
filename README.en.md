@@ -1,6 +1,6 @@
 # scrcpy-ios
 
-[简体中文](README.md) · [Website](https://moteng-network.github.io/scrcpy-ios/en/) · [Documentation](docs/README.md) · [Android app](https://github.com/felix021/scrcpy-apk)
+[简体中文](README.md) · [Website](https://oh-my-term.cn/scrcpy-ios/en/) · [Documentation](docs/README.md) · [Android app](https://github.com/moteng-network/scrcpy-apk)
 
 View and control an Android phone from an iPhone or iPad. Native SwiftUI interface, direct network ADB, and system VideoToolbox decoding; no relay server required.
 

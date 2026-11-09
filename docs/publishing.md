@@ -3,9 +3,9 @@
 ## 地址与职责
 
 - iOS 源码：<https://github.com/moteng-network/scrcpy-ios>。
-- 项目主页：<https://moteng-network.github.io/scrcpy-ios/>；英文版位于 `en/`，中英文相互链接。
-- 隐私政策：<https://moteng-network.github.io/scrcpy-ios/privacy.html>。
-- 使用与支持：<https://moteng-network.github.io/scrcpy-ios/support.html>。
+- 项目主页：<https://oh-my-term.cn/scrcpy-ios/>；英文版位于 `en/`，中英文相互链接。
+- 隐私政策：<https://oh-my-term.cn/scrcpy-ios/privacy.html>。
+- 使用与支持：<https://oh-my-term.cn/scrcpy-ios/support.html>。
 
 `site/` 是独立静态站点，`docs/` 仍是开发文档。网站不依赖编译、外部字体、统计脚本或 Cookie；图标直接复用项目的 SVG。页面上的设备是界面示意，明确标注为非截图。App Store 上架前不放虚假的商店下载链接；当前 iOS 状态和计划售价应与实际发布状态一致。
 

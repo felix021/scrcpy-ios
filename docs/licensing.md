@@ -13,7 +13,7 @@
 | 组件 | 版本 | 许可 / 源码 |
 | --- | --- | --- |
 | scrcpy-server | 5.0.1 | [Apache-2.0；官方源码](https://github.com/Genymobile/scrcpy/tree/v5.0.1) |
-| MicServer | scrcpy-apk 1.0.0 | [GPL-3.0；对应源码](https://github.com/felix021/scrcpy-apk/tree/v1.0.0) |
+| MicServer | scrcpy-apk 1.0.0 | [GPL-3.0；对应源码](https://github.com/moteng-network/scrcpy-apk/tree/v1.0.0) |
 | APK DEX 中未使用的 adblib 类 | 同上 | BSD-3-Clause；随包保留版权和许可 |
 
 `Resources/` 保留 GPL、scrcpy 和 adblib 许可文本及 `CorrespondingSource.txt`。当前麦克风构建复用固定 APK 中的整个 DEX，因此即使 adblib 不会被调用，也保留其声明。服务版本变更时同步更新 URL、哈希、声明和对应源码版本。

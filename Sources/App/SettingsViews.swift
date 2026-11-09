@@ -29,7 +29,7 @@ struct ApplicationSettings: View {
             Text(versionText).font(.system(size:13)).accessibilityIdentifier("appVersion")
             Text(L("开源许可 · GPL-3.0","License · GPL-3.0")).font(.system(size:12)).foregroundStyle(Theme.muted)
             Link(destination:URL(string:"https://github.com/moteng-network/scrcpy-ios")!) { VStack(alignment:.leading,spacing:5) { Label(L("代码仓库","Code repository"),systemImage:"arrow.up.right").font(.system(size:14,weight:.semibold)); Text("github.com/moteng-network/scrcpy-ios").font(.system(size:11)).foregroundStyle(Theme.muted) }.frame(maxWidth:.infinity,alignment:.leading).padding(14).background(Theme.field).clipShape(RoundedRectangle(cornerRadius:14)) }.accessibilityIdentifier("repository")
-            Link(destination:URL(string:"https://moteng-network.github.io/scrcpy-ios/privacy.html")!) { Label(L("隐私政策","Privacy policy"),systemImage:"hand.raised").font(.system(size:14,weight:.semibold)).frame(maxWidth:.infinity,alignment:.leading).padding(14).background(Theme.field).clipShape(RoundedRectangle(cornerRadius:14)) }.accessibilityIdentifier("privacyPolicy")
+            Link(destination:URL(string:"https://oh-my-term.cn/scrcpy-ios/privacy.html")!) { Label(L("隐私政策","Privacy policy"),systemImage:"hand.raised").font(.system(size:14,weight:.semibold)).frame(maxWidth:.infinity,alignment:.leading).padding(14).background(Theme.field).clipShape(RoundedRectangle(cornerRadius:14)) }.accessibilityIdentifier("privacyPolicy")
         } footer: { Button(L("完成","Done")) { dismiss() }.buttonStyle(AppButton(primary:true)).accessibilityIdentifier("settingsDone") }
     }
 }
