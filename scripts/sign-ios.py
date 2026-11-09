@@ -5,6 +5,7 @@ from datetime import datetime, timezone
 import hashlib
 from pathlib import Path
 import plistlib
+import re
 import shutil
 import stat
 import subprocess
@@ -19,10 +20,13 @@ def run(*command):
 def sign(args):
     profile_bytes = args.profile.read_bytes()
     profile = plistlib.loads(run('openssl', 'cms', '-verify', '-inform', 'DER', '-in', str(args.profile), '-noverify'))
+    permitted = profile.get('Entitlements', {})
+    if (profile.get('TeamIdentifier') != [args.team_id]
+            or permitted.get('com.apple.developer.team-identifier') != args.team_id):
+        raise ValueError('Provisioning profile belongs to a different Apple developer team')
     expiry = profile['ExpirationDate'].replace(tzinfo=timezone.utc)
     if expiry <= datetime.now(timezone.utc):
         raise ValueError('Provisioning profile has expired')
-    permitted = profile.get('Entitlements', {})
     devices = profile.get('ProvisionedDevices', [])
     if permitted.get('get-task-allow') or profile.get('ProvisionsAllDevices'):
         raise ValueError('A distribution profile is required')
@@ -99,10 +103,13 @@ def main():
     parser.add_argument('--input', type=Path, required=True, help='Unsigned device IPA')
     parser.add_argument('--profile', type=Path, required=True, help='Private .mobileprovision matching the distribution mode')
     parser.add_argument('--signer', type=Path, required=True, help='Private PEM containing distribution certificate and key')
+    parser.add_argument('--team-id', required=True, help='Expected Apple developer Team ID from this project’s private configuration')
     parser.add_argument('--distribution', choices=['ad-hoc', 'app-store'], default='ad-hoc')
     parser.add_argument('--device', help='Require this UDID in the profile; keep it in private local configuration')
     parser.add_argument('--output', type=Path, required=True)
     args = parser.parse_args()
+    if not re.fullmatch(r'[A-Z0-9]{10}', args.team_id):
+        parser.error('--team-id must contain exactly 10 uppercase letters or digits')
     if args.distribution == 'app-store' and args.device:
         parser.error('--device is only supported for Ad Hoc signing')
     if args.input.resolve() == args.output.resolve():

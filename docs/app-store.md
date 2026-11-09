@@ -4,14 +4,18 @@
 
 ## 当前完成项
 
-- Bundle ID 为 `cn.oh-my-term.scrcpy`；已注册独立 App ID，使用现有 Distribution 证书创建 App Store profile。描述文件与账号信息仅保存在私有配置。
+- Bundle ID 为 `cn.oh-my-term.scrcpy`；App ID、App Store profile 和签名证书必须归属项目指定的 Apple 开发者团队。描述文件与账号信息仅保存在私有配置。
 - TLS / SPAKE2 / AES-GCM 包装改为直接基于 Apache-2.0 AOSP adb 的 C++ 实现，移除 ADBClient-iOS 改编的 C 文件；完整来源和改编范围见 [第三方声明](../THIRD_PARTY_NOTICES.md)。项目整体仍为 GPL-3.0。Android v1.0.0 的麦克风 DEX 保持固定版本和旧入口，不随主应用包名改变。
 - `Resources/PrivacyInfo.xcprivacy` 声明不跟踪、不收集数据；UserDefaults 只存本 App 的语言和本机名称，使用 `CA92.1` 原因。没有使用 App Group 或读取其他 App 偏好。客户端本地配置和会话处理见 [隐私政策](https://scrcpy.oh-my-term.cn/privacy.html)。
 - `ITSAppUsesNonExemptEncryption` 改为 `true`，因为随包有 BoringSSL，不能当作只使用 Apple 系统加密。上传后仍需按真实实现完成加密问卷；当前默认销售草稿不含法国，中国大陆也待另行确认。
 - [中英文商店草稿](../appstore/README.md)、网站、支持和隐私 URL 已准备。审核备注明确 Android 硬件依赖、开发者选项与授权、二维码方向，以及 Android JAR 仅在 Android 执行。
 - 使用 Xcode 26.6；最低 iOS 16。13 项核心测试通过，真实 Android 错误配对码拒绝、正确配对码和 TLS 视频探针通过；iPhone / iPad 的配对 UI 回归以及中英文截图采集均通过，16 张截图与最终包证据留在私有构建目录。
 
-## 还需要 App Store Connect 中的 App 条目
+## 先确认团队，再创建 App 条目
+
+注册、创建描述文件、签名与上传前，先从本项目私有配置读取预期 Team ID，并核对 API 凭据可见的已知 App / Bundle ID 所属团队。网页的 Apple Developer 与 App Store Connect 也须选择同一账号 / 团队。参考项目的构建机器与账号可以不同，不能因复用了构建环境就沿用其凭据。
+
+确认团队后再注册本项目的 App ID、创建描述文件。Bundle ID 已注册时，应在「新建 App」的下拉菜单选择它；不要重复进入「注册 App ID」。如果网页与 API 显示不一致，先核对团队与权限，不能直接归因为包名格式或网页缓存。
 
 公开 API 已实际返回 `apps` 不支持 `CREATE`。注册 Bundle ID 不会自动生成 App 条目；账号所有者或有权限的网页角色需要在 <https://appstoreconnect.apple.com/apps> 点击「＋ → 新建 App」：
 
@@ -32,6 +36,7 @@
 ```sh
 scripts/build-ios.sh device
 python3 scripts/sign-ios.py \
+  --team-id "$APPLE_TEAM_ID" \
   --distribution app-store \
   --input build/Scrcpy-unsigned.ipa \
   --profile /private/path/scrcpy-appstore.mobileprovision \
@@ -39,7 +44,7 @@ python3 scripts/sign-ios.py \
   --output build/Scrcpy-AppStore.ipa
 ```
 
-App Store profile 不包含个人设备列表，不能当作 Ad Hoc 包安装。脚本校验包名、证书、有效期与分发类型，并保留 TestFlight 的 `beta-reports-active` 权限。签名后在 Mac 用 `codesign --verify --deep --strict` 检查，再通过 Apple 上传工具验证；本地签名验证不等于 App Store 服务端已经接受。Ad Hoc 默认模式保留，详见 [构建与签名](building.md)。
+`APPLE_TEAM_ID` 从已确认的项目私有配置读取；脚本强制要求该参数，并拒绝其他团队的描述文件。App Store profile 不包含个人设备列表，不能当作 Ad Hoc 包安装。脚本还校验包名、证书、有效期与分发类型，并保留 TestFlight 的 `beta-reports-active` 权限。签名后在 Mac 用 `codesign --verify --deep --strict` 检查，再通过 Apple 上传工具验证；本地签名验证不等于 App Store 服务端已经接受。Ad Hoc 默认模式保留，详见 [构建与签名](building.md)。
 
 ## 加密、销售与隐私
 

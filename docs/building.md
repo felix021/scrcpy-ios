@@ -49,6 +49,7 @@ Bundle ID 已从早期开发版的 `cn.felix021.scrcpy.ios` 调整为 `cn.oh-my-
 
 ```sh
 python3 scripts/sign-ios.py \
+  --team-id "$APPLE_TEAM_ID" \
   --input build/Scrcpy-unsigned.ipa \
   --profile /private/path/scrcpy-adhoc.mobileprovision \
   --signer /private/path/distribution-signer.pem \
@@ -56,7 +57,7 @@ python3 scripts/sign-ios.py \
   --output build/Scrcpy-adhoc.ipa
 ```
 
-脚本在签名前检查描述文件有效期、包名、证书及目标设备，写入描述文件和 Keychain 权限，并递归签名内嵌框架。`--device` 建议始终传入，避免生成不包含目标设备的包。输出带 SHA-256，可再在 Mac 上解包并用 `codesign --verify --deep --strict Payload/Scrcpy.app` 校验。
+`APPLE_TEAM_ID` 必须来自本项目已确认的私有配置，不能从待签名的描述文件自动推导。脚本先核对描述文件与权限中的团队，再检查有效期、包名、证书及目标设备，写入描述文件和 Keychain 权限，并递归签名内嵌框架。`--device` 建议始终传入，避免生成不包含目标设备的包。输出带 SHA-256，可再在 Mac 上解包并用 `codesign --verify --deep --strict Payload/Scrcpy.app` 校验。
 
 签名 IPA 只供描述文件内的设备安装，不是 TestFlight / App Store 包。描述文件含设备标识，签名包应通过私有下载渠道提供，不上传公开 Release。设备信息、描述文件和密钥路径保存在私有配置仓库；不在公开源码写死账号、证书或 UDID。
 

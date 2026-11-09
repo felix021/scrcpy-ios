@@ -75,6 +75,14 @@ xcrun swift run scrcpy-probe \
 
 设备 Archive、App Store 签名、Mac `codesign --verify --deep --strict` 和隐私清单语法通过；最终包检查了 Bundle ID、1.0.0 / build 4、加密标记、两种语言目的字符串，以及根目录与随包第三方声明一致性。本地验证不能替代 Apple 上传后的服务端处理。
 
+签名的团队边界另用以下检查验证：
+
+```sh
+python3 -m unittest discover -s Tests/SigningTests -v
+```
+
+三项测试覆盖其他团队、团队权限不一致和缺少团队的 profile，均在读取 signer 或解包 IPA 前拒绝。签名命令必须显式传入私有配置中确认的 `--team-id`。本轮还使用正确账号重新签名，并在 Mac 核对嵌入 profile、App 权限和严格递归签名；错误团队的签名包已隔离，不作为上架候选。
+
 ### 可重复的商店截图
 
 `StoreScreenshots/testCaptureProductScreens` 是显式选择的素材采集，不在普通验证中自动连接设备。只在自有模拟器和已授权 Android 上设置以下测试进程环境：
