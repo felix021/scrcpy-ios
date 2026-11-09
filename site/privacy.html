@@ -51,7 +51,8 @@
         连接地址、端口、主机名称、画质与控制选项保存在 App 的本地配置中；ADB
         私钥保存在系统
         Keychain（iOS）或应用私有存储（Android）。这些身份用于被控设备授权，App
-        不会主动上传它们。iOS 配置不参与 iCloud 备份，ADB
+        不会主动上传它们。iOS 的连接配置文件不参与 iCloud
+        备份；语言、本机名称等系统偏好可能按系统设置备份。ADB
         私钥仅限本机使用。配对码仅用于当次配对，不作为连接配置保存。
       </p>
       <h2>权限与设备连接</h2>
@@ -105,9 +106,11 @@
           Addresses, ports, device names, quality and control preferences are
           saved locally. ADB private keys are stored in the system Keychain on
           iOS, or app-private storage on Android. The app does not upload these
-          identities. iOS configuration files are excluded from iCloud backup,
-          and its private key is device-only. Pairing codes are used for the
-          current pairing operation and are not saved in connection profiles.
+          identities. iOS connection-profile files are excluded from iCloud
+          backup; system preferences such as language and this device’s name may
+          be backed up according to system settings, and its private key is
+          device-only. Pairing codes are used for the current pairing operation
+          and are not saved in connection profiles.
         </p>
         <h2>Permissions and connections</h2>
         <p>
