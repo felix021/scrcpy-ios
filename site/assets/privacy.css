@@ -1,0 +1,27 @@
+html[lang="en"] [data-policy-language="zh-CN"],
+html[lang="zh-CN"] [data-policy-language="en"] {
+  display: none;
+}
+
+.policy-languages {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.policy-languages .language {
+  min-height: 40px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.policy-languages .language:hover {
+  border-color: var(--mint);
+}
+
+.policy-languages .language[aria-pressed="true"] {
+  background: var(--mint);
+  border-color: var(--mint);
+  color: #09251e;
+}

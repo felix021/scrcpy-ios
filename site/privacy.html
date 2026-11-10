@@ -1,27 +1,33 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#0d141b" />
-    <title>隐私政策 / Privacy — Remote · scrcpy</title>
+    <title>Privacy Policy — Remote · scrcpy</title>
     <meta
       name="description"
-      content="Remote · scrcpy privacy policy / 远控隐私政策"
+      content="Privacy policy for Remote · scrcpy"
     />
-    <meta property="og:title" content="隐私政策 / Privacy — Remote · scrcpy" />
+    <meta property="og:title" content="Privacy Policy — Remote · scrcpy" />
     <meta
       property="og:description"
-      content="Remote · scrcpy privacy policy / 远控隐私政策"
+      content="Privacy policy for Remote · scrcpy"
     />
     <meta property="og:type" content="website" />
     <link rel="icon" type="image/svg+xml" href="assets/logo.svg" />
+    <script src="assets/privacy.js"></script>
     <link rel="stylesheet" href="assets/style.css" />
+    <link rel="stylesheet" href="assets/privacy.css" />
+    <noscript><style>.policy-languages { display: none; }</style></noscript>
   </head>
   <body>
-    <a class="skip" href="#main">跳到正文</a>
+    <a class="skip" href="#main"
+      ><span data-policy-language="zh-CN">跳到正文</span
+      ><span data-policy-language="en">Skip to content</span></a
+    >
     <header class="header">
-      <nav class="wrap nav" aria-label="主导航">
+      <nav class="wrap nav" aria-label="Main navigation">
         <a class="brand" href="./"
           ><img src="assets/logo.svg" width="38" height="38" alt="" />Remote
           <span style="color: var(--muted); font-weight: 400">· scrcpy</span></a
@@ -29,15 +35,22 @@
         <div class="navlinks">
           <a class="desktop" href="https://github.com/moteng-network/scrcpy-ios"
             >GitHub ↗</a
-          ><a class="language" href="./">首页 / Home</a>
+          ><a class="language" id="home-link" href="en/"
+            ><span data-policy-language="zh-CN">首页</span
+            ><span data-policy-language="en">Home</span></a
+          >
         </div>
       </nav>
     </header>
     <main id="main" class="wrap legal">
-      <h1>隐私政策 / Privacy Policy</h1>
+      <div class="policy-languages" role="group" aria-label="Page language">
+        <button class="language" type="button" lang="zh-CN" data-set-language="zh-CN" aria-pressed="false">中文</button>
+        <button class="language" type="button" lang="en" data-set-language="en" aria-pressed="true">English</button>
+      </div>
+      <article data-policy-language="zh-CN" lang="zh-CN">
+      <h1>隐私政策</h1>
       <p class="language-note">
-        Remote · scrcpy（远控 · scrcpy）<br />更新日期 / Last updated:
-        2026-11-09<br /><a href="#english" lang="en">Read in English ↓</a>
+        Remote · scrcpy（远控 · scrcpy）<br />更新日期：2026-11-10
       </p>
       <h2>我们处理什么信息</h2>
       <p>
@@ -73,7 +86,7 @@
         <a
           href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement"
           >GitHub 隐私声明</a
-        >。App Store 的购买与下载由 Apple 提供，我们不会获得你的付款卡信息。
+        >。网站仅在浏览器本地保存你手动选择的页面语言，不会向我们发送此偏好。App Store 的购买与下载由 Apple 提供，我们不会获得你的付款卡信息。
       </p>
       <h2>你的选择</h2>
       <p>
@@ -92,8 +105,10 @@
         联系项目维护者。Issue
         是公开的，请不要附带私钥、配对码、个人网络地址或录音内容。政策更新会在本页注明日期。
       </p>
-      <hr />
-      <div id="english" lang="en">
+      </article>
+      <article data-policy-language="en" lang="en">
+        <h1>Privacy Policy</h1>
+        <p class="language-note">Remote · scrcpy<br />Last updated: 2026-11-10</p>
         <h2>What the app processes</h2>
         <p>
           Remote · scrcpy sends screen video, Android audio, touch, keystrokes
@@ -133,7 +148,8 @@
           <a
             href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement"
             >GitHub Privacy Statement</a
-          >. Apple handles App Store purchases and downloads. We do not receive
+          >. This website stores only your manually selected page language in
+          your browser; this preference is not sent to us. Apple handles App Store purchases and downloads. We do not receive
           your payment-card details.
         </p>
         <h2>Your choices</h2>
@@ -156,7 +172,7 @@
           personal network addresses or recordings. Updates to this policy will
           be dated on this page.
         </p>
-      </div>
+      </article>
     </main>
     <footer class="wrap footer">
       <span
@@ -164,9 +180,15 @@
         <a href="https://github.com/moteng-network">Moteng Network</a></span
       >
       <div class="footer-links">
-        <a href="privacy.html">隐私政策</a><a href="support.html">使用与支持</a
+        <a href="privacy.html"
+          ><span data-policy-language="zh-CN">隐私政策</span
+          ><span data-policy-language="en">Privacy</span></a
+        ><a href="support.html"
+          ><span data-policy-language="zh-CN">使用与支持</span
+          ><span data-policy-language="en">Support</span></a
         ><a href="https://github.com/moteng-network/scrcpy-ios"
-          >源码 · GPL-3.0</a
+          ><span data-policy-language="zh-CN">源码 · GPL-3.0</span
+          ><span data-policy-language="en">Source · GPL-3.0</span></a
         >
       </div>
     </footer>
