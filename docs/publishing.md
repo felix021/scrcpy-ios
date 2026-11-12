@@ -4,6 +4,7 @@
 
 - iOS 源码：<https://github.com/moteng-network/scrcpy-ios>。
 - 项目主页：<https://scrcpy.oh-my-term.cn/>；英文版位于 `en/`，中英文相互链接。
+- App Store：<https://apps.apple.com/app/id6832577723>；中英文主页的首屏及底部均提供下载入口，并提示中国大陆区未上架，购买需使用其他已上架地区的 Apple 账号登录 App Store。
 - 隐私政策：<https://scrcpy.oh-my-term.cn/privacy.html>。
 - 使用与支持：<https://scrcpy.oh-my-term.cn/support.html>。
 
