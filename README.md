@@ -6,6 +6,8 @@
 
 当前正式版本 **1.0.0**，已在 [App Store](https://apps.apple.com/app/id6832577723) 发布，一次购买 **US$0.99**。最低 iOS / iPadOS 16。
 
+Apple 芯片 Mac（M1 或更新、macOS 13+）也可从同一 App Store 入口安装此 iOS 版，按 iPad App 运行；Mac 的完整功能尚未实机验收。安装和购买说明见[支持页面](https://scrcpy.oh-my-term.cn/support.html)。
+
 - Android 11+ 无线调试：二维码 / 6 位配对码，配对后通过 TLS 1.3 加密连接；本机名称可自定义。
 - 多主机连接配置，保存主机、端口、画质与控制选项。
 - H.264 / H.265 视频、触摸、多点触控、返回 / Home / 最近任务。

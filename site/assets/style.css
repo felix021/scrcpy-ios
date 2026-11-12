@@ -16,6 +16,21 @@ html {
   scroll-behavior: smooth;
   scroll-padding-top: 90px;
 }
+html[lang="en"] [data-language="zh-CN"],
+html[lang="zh-CN"] [data-language="en"] {
+  display: none;
+}
+.language-toggle {
+  display: none;
+  background: transparent;
+  cursor: pointer;
+}
+.has-language-switch .language-toggle {
+  display: inline-block;
+}
+.language-toggle:hover {
+  border-color: var(--mint);
+}
 body {
   margin: 0;
   background: var(--bg);
@@ -174,6 +189,65 @@ h1 em {
 .note {
   font-size: 12px;
   color: var(--muted);
+}
+.downloads {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 30px 0 14px;
+}
+.download-card {
+  min-width: 0;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--panel);
+}
+.store-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+  font-size: 14px;
+}
+.store-row svg {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  color: var(--mint);
+}
+.store-row strong {
+  white-space: nowrap;
+}
+.store-status {
+  margin-left: auto;
+  font-size: 11px;
+  color: #f0c780;
+  white-space: nowrap;
+}
+.download-detail {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+  margin: 12px 0;
+}
+.download-card .button {
+  width: 100%;
+  padding: 9px 10px;
+  font-size: 12px;
+}
+.app-store-download {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.app-store-download:hover {
+  border-color: var(--mint);
+}
+.store-price {
+  color: var(--mint);
+  font-size: 12px;
 }
 .art {
   position: relative;
@@ -470,6 +544,14 @@ h2 {
   margin: 0;
   flex-shrink: 0;
 }
+.get .downloads {
+  flex: 0 0 48%;
+  margin: 0;
+}
+.get .download-detail {
+  margin: 12px 0;
+  font-size: 12px;
+}
 .footer {
   border-top: 1px solid var(--line);
   padding: 30px 0 36px;
@@ -546,6 +628,13 @@ h2 {
   .get {
     align-items: flex-start;
     flex-direction: column;
+  }
+  .downloads {
+    grid-template-columns: 1fr;
+  }
+  .get .downloads {
+    width: 100%;
+    flex: auto;
   }
   .steps {
     gap: 24px;

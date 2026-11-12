@@ -1,10 +1,12 @@
 # scrcpy-ios
 
-[简体中文](README.md) · [Website](https://scrcpy.oh-my-term.cn/en/) · [Documentation](docs/README.md) · [Android app](https://github.com/moteng-network/scrcpy-apk)
+[简体中文](README.md) · [Website](https://scrcpy.oh-my-term.cn/) · [Documentation](docs/README.md) · [Android app](https://github.com/moteng-network/scrcpy-apk)
 
 View and control an Android phone from an iPhone or iPad. Native SwiftUI interface, direct network ADB, and system VideoToolbox decoding; no relay server required.
 
 **1.0.0 is available on the [App Store](https://apps.apple.com/app/id6832577723)** as a US$0.99 one-time purchase. Requires iOS / iPadOS 16 or later.
+
+Apple silicon Macs (M1 or later, macOS 13+) can install the same iOS app from the App Store and run it as an iPad app. Full functionality has not yet been tested on a physical Mac. See [Support](https://scrcpy.oh-my-term.cn/support.html) for installation and purchase details.
 
 - Android 11+ wireless debugging: QR code / six-digit pairing code, TLS 1.3 connections, and a customizable client name.
 - Multiple connection profiles, including host, port, video quality and control options.
