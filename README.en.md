@@ -4,7 +4,7 @@
 
 View and control an Android phone from an iPhone or iPad. Native SwiftUI interface, direct network ADB, and system VideoToolbox decoding; no relay server required.
 
-**1.0.0 App Store preparation build**, not yet available on the App Store. Requires iOS / iPadOS 16 or later.
+**1.0.0 is available on the [App Store](https://apps.apple.com/app/id6832577723)** as a US$0.99 one-time purchase. Requires iOS / iPadOS 16 or later.
 
 - Android 11+ wireless debugging: QR code / six-digit pairing code, TLS 1.3 connections, and a customizable client name.
 - Multiple connection profiles, including host, port, video quality and control options.

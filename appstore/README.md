@@ -1,6 +1,6 @@
 # 商店资料
 
-这些文件维护商店文案。当前中英文资料与截图已应用到 App Store Connect，首次版本 `1.0.0 (5)` 已提交审核，状态为 `WAITING_FOR_REVIEW`；一次购买 US$0.99，主语言 en-US，附 zh-Hans 本地化。初始销售范围暂不含中国大陆与法国，审核通过后手动发布；后续实际状态以 App Store Connect 为准。
+这些文件维护商店文案。当前中英文资料与截图已应用到 App Store Connect，首次版本 `1.0.0 (5)` 已正式发布，状态为 `READY_FOR_SALE`；一次购买 US$0.99，主语言 en-US，附 zh-Hans 本地化。初始销售范围暂不含中国大陆与法国，2026-11-12 已核对在售；后续实际状态以 App Store Connect 为准。
 
 - `metadata/*.json`：商店标题、副标题、推广文本、描述、关键词和公开 URL。
 - `review-notes.en.md`：硬件依赖、配对步骤、Android 服务执行位置、数据处理和审核说明。

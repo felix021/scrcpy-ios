@@ -4,7 +4,7 @@
 
 用 iPhone 或 iPad 查看和控制 Android 手机。原生 SwiftUI 界面，通过网络 ADB 连接；视频使用系统 VideoToolbox 解码，无需中转服务器。
 
-当前版本为 **1.0.0 上架准备版**，尚未发布到 App Store。最低 iOS / iPadOS 16。
+当前正式版本 **1.0.0**，已在 [App Store](https://apps.apple.com/app/id6832577723) 发布，一次购买 **US$0.99**。最低 iOS / iPadOS 16。
 
 - Android 11+ 无线调试：二维码 / 6 位配对码，配对后通过 TLS 1.3 加密连接；本机名称可自定义。
 - 多主机连接配置，保存主机、端口、画质与控制选项。
