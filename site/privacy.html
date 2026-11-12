@@ -50,7 +50,7 @@
       <article data-policy-language="zh-CN" lang="zh-CN">
       <h1>隐私政策</h1>
       <p class="language-note">
-        Remote · scrcpy（远控 · scrcpy）<br />更新日期：2026-11-10
+        Remote · scrcpy（远控 · scrcpy）<br />更新日期：2026-11-12
       </p>
       <h2>我们处理什么信息</h2>
       <p>
@@ -63,8 +63,7 @@
       <p>
         连接地址、端口、主机名称、画质与控制选项保存在 App 的本地配置中；ADB
         私钥保存在系统
-        Keychain（iOS）或应用私有存储（Android）。这些身份用于被控设备授权，App
-        不会主动上传它们。iOS 的连接配置文件不参与 iCloud
+        Keychain（iOS）或应用私有存储（Android），不会发送给远端或上传到我们的服务器。ADB 公钥和本机名称用于远端授权，会发送给你连接的设备，并可能保留在它的授权设备列表中。iOS 的连接配置文件不参与 iCloud
         备份；语言、本机名称等系统偏好可能按系统设置备份。ADB
         私钥仅限本机使用。配对码仅用于当次配对，不作为连接配置保存。
       </p>
@@ -74,7 +73,7 @@
         Android；麦克风权限仅在你开启麦克风转发时请求；Android 的 USB
         授权仅用于你选择的 USB ADB
         设备。你可以在系统设置中撤销权限。连接到你不信任的 Android
-        之前，请先确认其身份；它会收到你主动输入的内容和开启转发后的录音。
+        之前，请先确认其身份；它会收到你主动输入的内容和开启转发后的录音。无线调试配对后的连接使用 TLS；传统 TCP ADB 不提供同等的传输加密，应仅用于可信网络。你发送的文字可能保留在远端剪贴板或目标 App 中，保存方式取决于该 App。
       </p>
       <h2>收集、共享与第三方服务</h2>
       <p>
@@ -86,7 +85,7 @@
         <a
           href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement"
           >GitHub 隐私声明</a
-        >。网站仅在浏览器本地保存你手动选择的页面语言，不会向我们发送此偏好。App Store 的购买与下载由 Apple 提供，我们不会获得你的付款卡信息。
+        >。网站仅在浏览器本地保存你手动选择的页面语言，不会向我们发送此偏好。App Store 和 Google Play 的购买与下载分别由 Apple 和 Google 提供，我们不会获得你的付款卡信息。
       </p>
       <h2>你的选择</h2>
       <p>
@@ -108,7 +107,7 @@
       </article>
       <article data-policy-language="en" lang="en">
         <h1>Privacy Policy</h1>
-        <p class="language-note">Remote · scrcpy<br />Last updated: 2026-11-10</p>
+        <p class="language-note">Remote · scrcpy<br />Last updated: 2026-11-12</p>
         <h2>What the app processes</h2>
         <p>
           Remote · scrcpy sends screen video, Android audio, touch, keystrokes
@@ -121,8 +120,7 @@
         <p>
           Addresses, ports, device names, quality and control preferences are
           saved locally. ADB private keys are stored in the system Keychain on
-          iOS, or app-private storage on Android. The app does not upload these
-          identities. iOS connection-profile files are excluded from iCloud
+          iOS, or app-private storage on Android. The private key is never transmitted. Your ADB public key and device name are sent to the device you authorize and may remain in its authorized-device list. iOS connection-profile files are excluded from iCloud
           backup; system preferences such as language and this device’s name may
           be backed up according to system settings, and its private key is
           device-only. Pairing codes are used for the current pairing operation
@@ -135,7 +133,7 @@
           microphone forwarding. Android USB permission is used for the USB ADB
           device you select. You can revoke permissions in system settings.
           Connect only to Android devices you trust: they receive your input and
-          any microphone audio you choose to forward.
+          any microphone audio you choose to forward. Paired wireless debugging connections use TLS; classic TCP ADB does not provide equivalent transport encryption and should only be used on trusted networks. Text you send may remain in the remote clipboard or target app, whose own behavior determines its retention.
         </p>
         <h2>Collection, sharing and third parties</h2>
         <p>
@@ -149,7 +147,7 @@
             href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement"
             >GitHub Privacy Statement</a
           >. This website stores only your manually selected page language in
-          your browser; this preference is not sent to us. Apple handles App Store purchases and downloads. We do not receive
+          your browser; this preference is not sent to us. Apple and Google handle App Store and Google Play purchases and downloads respectively. We do not receive
           your payment-card details.
         </p>
         <h2>Your choices</h2>
